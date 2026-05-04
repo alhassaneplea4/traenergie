@@ -1,0 +1,213 @@
+[
+  {
+    "model": "stock.unit",
+    "pk": 1,
+    "fields": { "name": "Mètre", "abbreviation": "m" }
+  },
+  {
+    "model": "stock.unit",
+    "pk": 2,
+    "fields": { "name": "Pièce", "abbreviation": "pcs" }
+  },
+  {
+    "model": "stock.unit",
+    "pk": 3,
+    "fields": { "name": "Rouleau", "abbreviation": "roul." }
+  },
+  {
+    "model": "stock.unit",
+    "pk": 4,
+    "fields": { "name": "Boîte", "abbreviation": "bte" }
+  },
+  {
+    "model": "stock.unit",
+    "pk": 5,
+    "fields": { "name": "Kit", "abbreviation": "kit" }
+  },
+  {
+    "model": "stock.category",
+    "pk": 1,
+    "fields": {
+      "name": "Câbles & Fils",
+      "slug": "cables-fils",
+      "description": "Câbles électriques, fils conducteurs et gaines",
+      "color": "cyan",
+      "icon": "cable",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "stock.category",
+    "pk": 2,
+    "fields": {
+      "name": "Tableaux Électriques",
+      "slug": "tableaux-electriques",
+      "description": "Tableaux de distribution, coffrets et armoires",
+      "color": "blue",
+      "icon": "panel",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "stock.category",
+    "pk": 3,
+    "fields": {
+      "name": "Disjoncteurs & Protections",
+      "slug": "disjoncteurs-protections",
+      "description": "Disjoncteurs, fusibles, interrupteurs différentiels",
+      "color": "red",
+      "icon": "shield",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "stock.category",
+    "pk": 4,
+    "fields": {
+      "name": "Éclairage",
+      "slug": "eclairage",
+      "description": "Luminaires, ampoules LED, projecteurs",
+      "color": "yellow",
+      "icon": "lightbulb",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "stock.category",
+    "pk": 5,
+    "fields": {
+      "name": "Prises & Interrupteurs",
+      "slug": "prises-interrupteurs",
+      "description": "Prises de courant, interrupteurs et variateurs",
+      "color": "green",
+      "icon": "plug",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "stock.category",
+    "pk": 6,
+    "fields": {
+      "name": "Outillage & Accessoires",
+      "slug": "outillage-accessoires",
+      "description": "Outils électriques et accessoires d'installation",
+      "color": "purple",
+      "icon": "tool",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "stock.product",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "unit": 3,
+      "supplier": null,
+      "name": "Câble HO7V-R 2.5mm² Rouge",
+      "sku": "CABLE-H07VR-25-R",
+      "description": "Câble rigide 2.5mm² rouge, idéal pour circuits de prise de courant",
+      "image": "",
+      "unit_price": "8500.00",
+      "quantity_in_stock": 45,
+      "min_stock_level": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "stock.product",
+    "pk": 2,
+    "fields": {
+      "category": 1,
+      "unit": 3,
+      "supplier": null,
+      "name": "Câble HO7V-R 1.5mm² Bleu",
+      "sku": "CABLE-H07VR-15-B",
+      "description": "Câble rigide 1.5mm² bleu pour circuit d'éclairage",
+      "image": "",
+      "unit_price": "5500.00",
+      "quantity_in_stock": 60,
+      "min_stock_level": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "stock.product",
+    "pk": 3,
+    "fields": {
+      "category": 3,
+      "unit": 2,
+      "supplier": null,
+      "name": "Disjoncteur bipolaire 20A",
+      "sku": "DISJ-BI-20A",
+      "description": "Disjoncteur bipolaire 20A pour circuit prise de courant",
+      "image": "",
+      "unit_price": "12000.00",
+      "quantity_in_stock": 4,
+      "min_stock_level": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "stock.product",
+    "pk": 4,
+    "fields": {
+      "category": 3,
+      "unit": 2,
+      "supplier": null,
+      "name": "Interrupteur différentiel 30mA",
+      "sku": "INT-DIFF-30MA",
+      "description": "Interrupteur différentiel type A 30mA 40A",
+      "image": "",
+      "unit_price": "35000.00",
+      "quantity_in_stock": 0,
+      "min_stock_level": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "stock.product",
+    "pk": 5,
+    "fields": {
+      "category": 4,
+      "unit": 2,
+      "supplier": null,
+      "name": "Projecteur LED 50W",
+      "sku": "LED-PROJ-50W",
+      "description": "Projecteur LED 50W 4500lm IP65 blanc neutre",
+      "image": "",
+      "unit_price": "28000.00",
+      "quantity_in_stock": 18,
+      "min_stock_level": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "stock.product",
+    "pk": 6,
+    "fields": {
+      "category": 5,
+      "unit": 2,
+      "supplier": null,
+      "name": "Prise double 16A + terre",
+      "sku": "PRISE-DBL-16A",
+      "description": "Prise de courant double 16A avec terre, blanc",
+      "image": "",
+      "unit_price": "4500.00",
+      "quantity_in_stock": 3,
+      "min_stock_level": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  }
+]

@@ -1,0 +1,96 @@
+/* ── Traenergie custom styles ── */
+
+/* Smooth scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(6, 182, 212, 0.2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(6, 182, 212, 0.4); }
+
+/* Selection color */
+::selection { background: rgba(6, 182, 212, 0.3); color: #fff; }
+
+/* HTMX loading indicator */
+.htmx-request .htmx-indicator { display: inline-block; }
+.htmx-indicator { display: none; }
+.htmx-request { opacity: 0.7; }
+
+/* Neon glow text utility */
+.text-glow-cyan { text-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
+.text-glow-gold { text-shadow: 0 0 20px rgba(251, 191, 36, 0.5); }
+
+/* Glassmorphism card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+/* Input file style reset */
+input[type="file"] {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  width: 100%;
+}
+input[type="file"]:hover { border-color: rgba(6,182,212,0.4); }
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Animated gradient border */
+@keyframes borderSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Scroll-based reveal for website */
+[data-aos] { will-change: transform, opacity; }
+
+/* Dashboard sidebar transition */
+aside { transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* Active nav indicator */
+.nav-active {
+  position: relative;
+}
+.nav-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: #06b6d4;
+  border-radius: 0 3px 3px 0;
+}
+
+/* Table row hover transition */
+tbody tr { transition: background 0.15s; }
+
+/* Toast animation */
+[x-cloak] { display: none !important; }
+
+/* Mobile menu backdrop */
+.menu-backdrop {
+  background: rgba(10, 15, 30, 0.95);
+  backdrop-filter: blur(16px);
+}
+
+/* Chart.js font override */
+.chartjs-tooltip { font-family: 'Inter', sans-serif !important; }
+
+/* Pulse animation for status dot */
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.95); }
+}
+.status-dot-active { animation: statusPulse 2s infinite; }

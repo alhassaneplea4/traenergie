@@ -1,0 +1,93 @@
+[
+  {
+    "model": "website.companyinfo",
+    "pk": 1,
+    "fields": {
+      "name": "Traenergie",
+      "tagline": "Votre expert en solutions électriques & équipements professionnels",
+      "description": "Traenergie est spécialisée dans l'installation, la maintenance et la vente d'équipements électriques en Côte d'Ivoire.",
+      "address": "Cocody, Abidjan, Côte d'Ivoire",
+      "phone": "+225 07 00 00 00 00",
+      "email": "contact@traenergie.com",
+      "whatsapp": "+225 07 00 00 00 00",
+      "facebook_url": "",
+      "linkedin_url": "",
+      "years_experience": 10,
+      "projects_count": 500,
+      "clients_count": 200,
+      "technicians_count": 50
+    }
+  },
+  {
+    "model": "website.service",
+    "pk": 1,
+    "fields": {
+      "icon": "zap",
+      "title": "Installation Électrique",
+      "description": "Installation complète de réseaux électriques pour particuliers, entreprises et industries selon les normes en vigueur.",
+      "color": "cyan",
+      "order": 1,
+      "is_active": true
+    }
+  },
+  {
+    "model": "website.service",
+    "pk": 2,
+    "fields": {
+      "icon": "tool",
+      "title": "Maintenance & Dépannage",
+      "description": "Intervention rapide 24h/7j pour le dépannage et la maintenance préventive de vos installations électriques.",
+      "color": "yellow",
+      "order": 2,
+      "is_active": true
+    }
+  },
+  {
+    "model": "website.service",
+    "pk": 3,
+    "fields": {
+      "icon": "activity",
+      "title": "Audit Énergétique",
+      "description": "Analyse complète de votre consommation énergétique pour identifier les économies potentielles et optimiser vos coûts.",
+      "color": "green",
+      "order": 3,
+      "is_active": true
+    }
+  },
+  {
+    "model": "website.service",
+    "pk": 4,
+    "fields": {
+      "icon": "cpu",
+      "title": "Automatisation Industrielle",
+      "description": "Conception et mise en place de systèmes d'automatisation pour optimiser vos processus de production.",
+      "color": "purple",
+      "order": 4,
+      "is_active": true
+    }
+  },
+  {
+    "model": "website.service",
+    "pk": 5,
+    "fields": {
+      "icon": "shield",
+      "title": "Protection & Sécurité",
+      "description": "Installation de systèmes de protection contre la foudre, les surtensions et les courts-circuits.",
+      "color": "red",
+      "order": 5,
+      "is_active": true
+    }
+  },
+  {
+    "model": "website.service",
+    "pk": 6,
+    "fields": {
+      "icon": "bolt",
+      "title": "Vente d'Équipements",
+      "description": "Fourniture de câbles, tableaux électriques, disjoncteurs, prises et tous équipements électriques certifiés.",
+      "color": "blue",
+      "order": 6,
+      "is_active": true
+    }
+  }
+]

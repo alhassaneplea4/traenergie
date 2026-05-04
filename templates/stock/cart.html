@@ -1,0 +1,86 @@
+{% extends "base_dashboard.html" %}
+{% load humanize %}
+
+{% block title %}Panier — Traenergie{% endblock %}
+{% block page_title %}Panier de sortie{% endblock %}
+{% block page_subtitle %}Gérer les sorties de stock via le panier{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6" x-data="{ showProducts: true }">
+
+  <!-- ── PRODUCT CATALOG ──────────────────────── -->
+  <div class="xl:col-span-2 space-y-4">
+    <div class="flex items-center justify-between">
+      <h3 class="font-semibold text-white text-sm">Catalogue produits</h3>
+      <div class="relative">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" placeholder="Filtrer les produits…" id="product-search"
+               class="bg-card border border-white/8 rounded-xl pl-8 pr-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 transition w-48"
+               oninput="filterProducts(this.value)">
+      </div>
+    </div>
+
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {% for product in products %}
+      <div class="product-card bg-card border border-white/8 rounded-xl p-4 hover:border-cyan-500/30 transition group"
+           data-name="{{ product.name|lower }}">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" class="w-full h-full object-cover rounded-lg" alt="">
+            {% else %}
+            <svg class="w-5 h-5 text-cyan-500/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            {% endif %}
+          </div>
+          <span class="px-2 py-0.5 rounded-full text-xs font-semibold
+            {% if product.quantity_in_stock > 10 %}bg-green-500/15 text-green-400
+            {% elif product.quantity_in_stock > 0 %}bg-yellow-500/15 text-yellow-400
+            {% else %}bg-red-500/15 text-red-400{% endif %}">
+            {{ product.quantity_in_stock }} en stock
+          </span>
+        </div>
+        <h4 class="text-white text-sm font-medium mb-1 line-clamp-2 leading-tight">{{ product.name }}</h4>
+        <p class="text-gray-500 text-xs mb-3 font-mono">{{ product.sku }}</p>
+        <div class="flex items-center justify-between">
+          <span class="text-cyan-400 font-semibold text-sm">{{ product.unit_price|floatformat:0|intcomma }} <span class="text-gray-600 font-normal text-xs">FCFA</span></span>
+          <button hx-post="{% url 'dashboard:cart_add' product.id %}"
+                  hx-target="#cart-panel"
+                  hx-swap="innerHTML"
+                  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                  {% if product.quantity_in_stock == 0 %}disabled{% endif %}
+                  class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition
+                    {% if product.quantity_in_stock > 0 %}bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20
+                    {% else %}bg-white/5 text-gray-600 border border-white/5 cursor-not-allowed{% endif %}">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Ajouter
+          </button>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-600">
+        <svg class="w-10 h-10 mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+        <p class="text-sm">Aucun produit disponible en stock</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- ── CART PANEL ────────────────────────────── -->
+  <div class="xl:col-span-1">
+    <div id="cart-panel">
+      {% include "stock/partials/cart_sidebar.html" %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function filterProducts(query) {
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.style.display = card.dataset.name.includes(query.toLowerCase()) ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}

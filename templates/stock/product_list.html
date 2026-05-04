@@ -1,0 +1,154 @@
+{% extends "base_dashboard.html" %}
+{% load humanize %}
+
+{% block title %}Produits — Traenergie{% endblock %}
+{% block page_title %}Gestion des produits{% endblock %}
+{% block page_subtitle %}Inventaire complet des équipements électriques{% endblock %}
+
+{% block extra_head %}
+<style>
+  .stock-badge-ok    { @apply bg-green-500/15 text-green-400 border border-green-500/25; }
+  .stock-badge-low   { @apply bg-yellow-500/15 text-yellow-400 border border-yellow-500/25; }
+  .stock-badge-out   { @apply bg-red-500/15 text-red-400 border border-red-500/25; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Toolbar -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+  <!-- Search + filter -->
+  <div class="flex items-center gap-2 flex-1 w-full sm:max-w-md">
+    <form method="get"
+          hx-get="{% url 'dashboard:products' %}"
+          hx-target="#product-table-wrapper"
+          hx-push-url="true"
+          class="flex gap-2 flex-1">
+      <div class="relative flex-1">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" name="q" value="{{ search }}"
+               placeholder="Rechercher un produit…"
+               class="w-full bg-card border border-white/8 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 transition">
+      </div>
+      <select name="category"
+              hx-get="{% url 'dashboard:products' %}"
+              hx-target="#product-table-wrapper"
+              hx-trigger="change"
+              class="bg-card border border-white/8 rounded-xl px-3 py-2.5 text-sm text-gray-300 focus:outline-none focus:border-cyan-500/50 transition">
+        <option value="">Toutes catégories</option>
+        {% for cat in categories %}
+        <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  <!-- Add product button -->
+  <button onclick="document.getElementById('modal-add-product').classList.remove('hidden')"
+          class="flex items-center gap-2 px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-white text-sm font-semibold rounded-xl transition shadow-lg shadow-cyan-500/20 shrink-0">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+    Nouveau produit
+  </button>
+</div>
+
+<!-- Product table (HTMX target) -->
+<div id="product-table-wrapper">
+  {% include "stock/partials/product_table.html" %}
+</div>
+
+
+<!-- ── ADD PRODUCT MODAL ─────────────────────────── -->
+<div id="modal-add-product" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+     x-data
+     @keydown.escape.window="document.getElementById('modal-add-product').classList.add('hidden')">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('modal-add-product').classList.add('hidden')"></div>
+  <div class="relative bg-[#161d2b] border border-white/10 rounded-2xl p-6 w-full max-w-2xl shadow-2xl z-10 max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-display font-semibold text-lg text-white">Ajouter un produit</h3>
+      <button onclick="document.getElementById('modal-add-product').classList.add('hidden')"
+              class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form method="post" action="{% url 'dashboard:product_create' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2">
+          <label class="text-gray-400 text-xs mb-1.5 block">Nom du produit *</label>
+          {{ form.name }}
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs mb-1.5 block">Référence SKU *</label>
+          {{ form.sku }}
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs mb-1.5 block">Catégorie *</label>
+          {{ form.category }}
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs mb-1.5 block">Unité</label>
+          {{ form.unit }}
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs mb-1.5 block">Fournisseur</label>
+          {{ form.supplier }}
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs mb-1.5 block">Prix unitaire (FCFA) *</label>
+          {{ form.unit_price }}
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs mb-1.5 block">Quantité en stock</label>
+          {{ form.quantity_in_stock }}
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs mb-1.5 block">Stock minimum d'alerte</label>
+          {{ form.min_stock_level }}
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs mb-1.5 block">Image</label>
+          {{ form.image }}
+        </div>
+        <div class="col-span-2">
+          <label class="text-gray-400 text-xs mb-1.5 block">Description</label>
+          {{ form.description }}
+        </div>
+        <div class="col-span-2 flex items-center gap-2">
+          {{ form.is_active }}
+          <label class="text-gray-300 text-sm">Produit actif</label>
+        </div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button type="button" onclick="document.getElementById('modal-add-product').classList.add('hidden')"
+                class="flex-1 px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 text-sm font-medium rounded-xl transition">
+          Annuler
+        </button>
+        <button type="submit"
+                class="flex-1 px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-white text-sm font-semibold rounded-xl transition">
+          Créer le produit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- ── EDIT PRODUCT MODAL ────────────────────────── -->
+<div id="modal-edit-product" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+     @keydown.escape.window="document.getElementById('modal-edit-product').classList.add('hidden')">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"
+       onclick="document.getElementById('modal-edit-product').classList.add('hidden')"></div>
+  <div id="modal-edit-content"
+       class="relative bg-[#161d2b] border border-white/10 rounded-2xl p-6 w-full max-w-2xl shadow-2xl z-10 max-h-[90vh] overflow-y-auto">
+    <!-- Chargé via HTMX au clic sur Modifier -->
+    <div class="flex items-center justify-center py-10 text-gray-600">
+      <svg class="w-5 h-5 animate-spin mr-2" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+      </svg>
+      Chargement…
+    </div>
+  </div>
+</div>
+
+{% endblock %}

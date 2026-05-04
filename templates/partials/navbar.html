@@ -1,0 +1,68 @@
+{% load static %}
+<nav x-data="{ open: false, scrolled: false }"
+     @scroll.window="scrolled = window.scrollY > 50"
+     :class="scrolled ? 'bg-navy-900/95 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'"
+     class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 lg:h-20">
+
+      <!-- Logo -->
+      <a href="{% url 'website:home' %}" class="flex items-center gap-3 group">
+        <div class="relative w-10 h-10 flex items-center justify-center">
+          <div class="absolute inset-0 bg-cyan-500 rounded-lg opacity-20 group-hover:opacity-40 transition"></div>
+          <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <span class="font-display font-bold text-xl tracking-tight">
+          <span class="text-white">Traen</span><span class="text-cyan-400">ergie</span>
+        </span>
+      </a>
+
+      <!-- Desktop nav -->
+      <div class="hidden lg:flex items-center gap-8">
+        <a href="{% url 'website:home' %}#services" class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Services</a>
+        <a href="{% url 'website:home' %}#projets" class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Projets</a>
+        <a href="{% url 'website:home' %}#equipe" class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Équipe</a>
+        <a href="{% url 'website:home' %}#temoignages" class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Témoignages</a>
+        <a href="{% url 'website:home' %}#contact" class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Contact</a>
+      </div>
+
+      <!-- CTA -->
+      <div class="hidden lg:flex items-center gap-3">
+        {% if user.is_authenticated %}
+          <a href="{% url 'dashboard:home' %}" class="flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-xl text-cyan-400 text-sm font-medium hover:bg-cyan-500/20 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+            Dashboard
+          </a>
+        {% else %}
+          <a href="{% url 'accounts:login' %}" class="text-gray-400 hover:text-white text-sm font-medium transition">Connexion</a>
+          <a href="{% url 'website:home' %}#contact" class="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-white text-sm font-semibold rounded-xl transition shadow-lg shadow-cyan-500/25">
+            Devis gratuit
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Mobile menu button -->
+      <button @click="open = !open" class="lg:hidden p-2 rounded-lg text-gray-400 hover:text-white">
+        <svg x-show="!open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg x-show="open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div x-show="open" x-transition class="lg:hidden bg-navy-900/98 backdrop-blur-xl border-t border-white/10">
+    <div class="px-4 py-4 space-y-2">
+      <a href="{% url 'website:home' %}#services" class="block px-3 py-2 text-gray-300 hover:text-cyan-400 text-sm">Services</a>
+      <a href="{% url 'website:home' %}#projets" class="block px-3 py-2 text-gray-300 hover:text-cyan-400 text-sm">Projets</a>
+      <a href="{% url 'website:home' %}#equipe" class="block px-3 py-2 text-gray-300 hover:text-cyan-400 text-sm">Équipe</a>
+      <a href="{% url 'website:home' %}#contact" class="block px-3 py-2 text-gray-300 hover:text-cyan-400 text-sm">Contact</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard:home' %}" class="block px-3 py-2 text-cyan-400 text-sm font-medium">Dashboard</a>
+      {% else %}
+        <a href="{% url 'accounts:login' %}" class="block px-3 py-2 text-gray-300 hover:text-cyan-400 text-sm">Connexion</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>

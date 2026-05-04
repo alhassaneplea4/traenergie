@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Dashboard — Traenergie{% endblock %}</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sidebar: '#0d1117',
+            canvas: '#0f1623',
+            card: '#161d2b',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body class="h-full bg-canvas text-gray-100 font-sans antialiased"
+      x-data="{ sidebarOpen: true, mobileMenuOpen: false }">
+
+<!-- ── MOBILE SIDEBAR OVERLAY ──────────────────── -->
+<div x-show="mobileMenuOpen"
+     x-transition:enter="transition ease-out duration-200"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     @click="mobileMenuOpen = false"
+     class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
+     style="display:none"></div>
+
+<div x-show="mobileMenuOpen"
+     x-transition:enter="transition ease-out duration-250"
+     x-transition:enter-start="-translate-x-full"
+     x-transition:enter-end="translate-x-0"
+     x-transition:leave="transition ease-in duration-200"
+     x-transition:leave-start="translate-x-0"
+     x-transition:leave-end="-translate-x-full"
+     class="fixed inset-y-0 left-0 w-64 flex flex-col bg-sidebar border-r border-white/5 z-50 lg:hidden"
+     style="display:none">
+
+  <!-- Logo mobile -->
+  <div class="flex items-center justify-between px-4 h-16 border-b border-white/5">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 flex items-center justify-center bg-cyan-500/15 border border-cyan-500/25 rounded-lg">
+        <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      </div>
+      <span class="font-display font-bold text-base"><span class="text-white">Traen</span><span class="text-cyan-400">ergie</span></span>
+    </div>
+    <button @click="mobileMenuOpen = false" class="p-1 rounded-lg text-gray-400 hover:text-white">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <!-- Nav mobile -->
+  <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
+    <p class="px-3 pt-2 pb-1 text-gray-600 text-xs font-semibold uppercase tracking-widest">Principal</p>
+    <a href="{% url 'dashboard:home' %}" @click="mobileMenuOpen = false"
+       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition">
+      <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      Tableau de bord
+    </a>
+    <p class="px-3 pt-4 pb-1 text-gray-600 text-xs font-semibold uppercase tracking-widest">Stock</p>
+    <a href="{% url 'dashboard:products' %}" @click="mobileMenuOpen = false"
+       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition">
+      <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+      Produits
+    </a>
+    <a href="{% url 'dashboard:stock_movements' %}" @click="mobileMenuOpen = false"
+       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition">
+      <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+      Mouvements
+    </a>
+    <a href="{% url 'dashboard:cart' %}" @click="mobileMenuOpen = false"
+       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition">
+      <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+      Panier
+      {% if cart_count > 0 %}<span class="ml-auto bg-cyan-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{{ cart_count }}</span>{% endif %}
+    </a>
+  </nav>
+
+  <!-- User mobile -->
+  <div class="border-t border-white/5 p-3">
+    <form method="post" action="{% url 'accounts:logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-500/10 transition">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        Déconnexion
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="flex h-full min-h-screen">
+
+  <!-- ── SIDEBAR DESKTOP ───────────────────────── -->
+  <aside :class="sidebarOpen ? 'w-64' : 'w-16'"
+         class="hidden lg:flex flex-col bg-sidebar border-r border-white/5 transition-all duration-300 ease-in-out shrink-0 fixed inset-y-0 left-0 z-40">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-3 px-4 h-16 border-b border-white/5">
+      <div class="w-8 h-8 flex items-center justify-center bg-cyan-500/15 border border-cyan-500/25 rounded-lg shrink-0">
+        <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      </div>
+      <span x-show="sidebarOpen" x-transition class="font-display font-bold text-base whitespace-nowrap">
+        <span class="text-white">Traen</span><span class="text-cyan-400">ergie</span>
+      </span>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
+
+      <p x-show="sidebarOpen" class="px-3 pt-2 pb-1 text-gray-600 text-xs font-semibold uppercase tracking-widest">Principal</p>
+
+      <a href="{% url 'dashboard:home' %}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
+                {% if request.resolver_match.url_name == 'home' %}bg-cyan-500/10 text-cyan-400 border border-cyan-500/20{% else %}text-gray-400 hover:bg-white/5 hover:text-white{% endif %}">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span x-show="sidebarOpen" x-transition>Tableau de bord</span>
+      </a>
+
+      <p x-show="sidebarOpen" class="px-3 pt-4 pb-1 text-gray-600 text-xs font-semibold uppercase tracking-widest">Stock</p>
+
+      <a href="{% url 'dashboard:products' %}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
+                {% if request.resolver_match.url_name == 'products' %}bg-cyan-500/10 text-cyan-400 border border-cyan-500/20{% else %}text-gray-400 hover:bg-white/5 hover:text-white{% endif %}">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+        <span x-show="sidebarOpen" x-transition>Produits</span>
+      </a>
+
+      <a href="{% url 'dashboard:stock_movements' %}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
+                {% if request.resolver_match.url_name == 'stock_movements' %}bg-cyan-500/10 text-cyan-400 border border-cyan-500/20{% else %}text-gray-400 hover:bg-white/5 hover:text-white{% endif %}">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+        <span x-show="sidebarOpen" x-transition>Mouvements</span>
+      </a>
+
+      <a href="{% url 'dashboard:cart' %}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
+                {% if request.resolver_match.url_name == 'cart' %}bg-cyan-500/10 text-cyan-400 border border-cyan-500/20{% else %}text-gray-400 hover:bg-white/5 hover:text-white{% endif %}">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        <span x-show="sidebarOpen" x-transition class="flex-1">Panier</span>
+        {% if cart_count > 0 %}
+        <span x-show="sidebarOpen" class="ml-auto bg-cyan-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{{ cart_count }}</span>
+        {% endif %}
+      </a>
+
+      <p x-show="sidebarOpen" class="px-3 pt-4 pb-1 text-gray-600 text-xs font-semibold uppercase tracking-widest">Site web</p>
+
+      <a href="{% url 'website:home' %}" target="_blank"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        <span x-show="sidebarOpen" x-transition>Voir le site</span>
+      </a>
+    </nav>
+
+    <!-- User -->
+    <div class="border-t border-white/5 p-3">
+      <div x-data="{ open: false }" class="relative">
+        <button @click="open = !open" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+            {{ request.user.username|first|upper }}
+          </div>
+          <div x-show="sidebarOpen" class="text-left flex-1 min-w-0">
+            <div class="text-sm font-medium text-white truncate">{{ request.user.get_full_name|default:request.user.username }}</div>
+            <div class="text-xs text-gray-500 truncate">{{ request.user.email|default:"" }}</div>
+          </div>
+          <svg x-show="sidebarOpen" class="w-4 h-4 text-gray-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div x-show="open" @click.outside="open = false" x-transition
+             class="absolute bottom-full left-0 right-0 mb-2 bg-card border border-white/10 rounded-xl shadow-xl py-1 z-50">
+          <a href="{% url 'website:home' %}" class="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            Site web
+          </a>
+          <form method="post" action="{% url 'accounts:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+              Déconnexion
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ──────────────────────────── -->
+  <div :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-16'"
+       class="flex-1 flex flex-col min-w-0 transition-all duration-300">
+
+    <!-- Top bar -->
+    <header class="sticky top-0 z-30 flex items-center gap-4 h-16 px-4 lg:px-6 bg-canvas/80 backdrop-blur-xl border-b border-white/5">
+      <!-- Toggle sidebar desktop -->
+      <button @click="sidebarOpen = !sidebarOpen"
+              class="hidden lg:flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+      </button>
+      <!-- Toggle sidebar mobile -->
+      <button @click="mobileMenuOpen = true"
+              class="flex lg:hidden items-center justify-center w-8 h-8 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+
+      <!-- Breadcrumb -->
+      <div class="flex-1">
+        <h1 class="text-sm font-semibold text-white">{% block page_title %}Dashboard{% endblock %}</h1>
+        <p class="text-xs text-gray-500">{% block page_subtitle %}{% endblock %}</p>
+      </div>
+
+      <!-- Right actions -->
+      <div class="flex items-center gap-3">
+        <!-- Cart badge -->
+        <a href="{% url 'dashboard:cart' %}" class="relative flex items-center justify-center w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition text-gray-400 hover:text-white">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          {% if cart_count > 0 %}
+          <span class="absolute -top-1 -right-1 w-4 h-4 bg-cyan-500 text-white text-xs font-bold rounded-full flex items-center justify-center">{{ cart_count }}</span>
+          {% endif %}
+        </a>
+
+        <!-- Avatar -->
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-xs font-bold">
+          {{ request.user.username|first|upper }}
+        </div>
+      </div>
+    </header>
+
+    <!-- Toast messages -->
+    {% if messages %}
+    <div class="fixed top-20 right-4 z-50 space-y-2">
+      {% for message in messages %}
+      <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-transition
+           class="flex items-center gap-3 px-4 py-3 rounded-xl border text-sm max-w-sm shadow-xl
+                  {% if message.tags == 'success' %}bg-green-500/15 border-green-500/30 text-green-300
+                  {% elif message.tags == 'error' %}bg-red-500/15 border-red-500/30 text-red-300
+                  {% elif message.tags == 'warning' %}bg-yellow-500/15 border-yellow-500/30 text-yellow-300
+                  {% else %}bg-cyan-500/15 border-cyan-500/30 text-cyan-300{% endif %}">
+        <span>{{ message }}</span>
+        <button @click="show = false" class="ml-auto text-current opacity-50 hover:opacity-100 leading-none">&times;</button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Page content -->
+    <main class="flex-1 p-4 lg:p-6 overflow-auto">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

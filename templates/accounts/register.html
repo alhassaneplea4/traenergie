@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscription — Traenergie</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>body { font-family: 'Inter', sans-serif; } .font-display { font-family: 'Space Grotesk', sans-serif; }</style>
+</head>
+<body class="min-h-full bg-[#0a0f1e] flex items-center justify-center p-4 py-12">
+
+  <div class="fixed inset-0 opacity-10 pointer-events-none"
+       style="background-image: linear-gradient(rgba(6,182,212,0.3) 1px,transparent 1px),linear-gradient(90deg,rgba(6,182,212,0.3) 1px,transparent 1px);background-size:50px 50px"></div>
+  <div class="fixed top-1/3 right-1/4 w-80 h-80 bg-purple-500/8 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="relative w-full max-w-sm">
+
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 mb-3">
+        <div class="w-10 h-10 flex items-center justify-center bg-cyan-500/15 border border-cyan-500/25 rounded-xl">
+          <svg class="w-5 h-5 text-cyan-400" fill="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <span class="font-display font-bold text-2xl"><span class="text-white">Traen</span><span class="text-cyan-400">ergie</span></span>
+      </div>
+      <p class="text-gray-500 text-sm">Créer un compte opérateur</p>
+    </div>
+
+    <div class="bg-white/3 border border-white/10 rounded-2xl p-7 backdrop-blur-sm shadow-2xl shadow-black/40">
+      <h2 class="font-display font-semibold text-xl text-white mb-6">Inscription</h2>
+
+      {% if messages %}
+      {% for message in messages %}
+      <div class="flex items-center gap-2 p-3 mb-4 bg-red-500/15 border border-red-500/25 rounded-xl text-red-300 text-sm">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-gray-400 text-xs font-medium mb-1.5 block">Prénom</label>
+            <input type="text" name="first_name" required
+                   class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-cyan-500/60 transition"
+                   placeholder="Jean">
+          </div>
+          <div>
+            <label class="text-gray-400 text-xs font-medium mb-1.5 block">Nom</label>
+            <input type="text" name="last_name" required
+                   class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-cyan-500/60 transition"
+                   placeholder="Koné">
+          </div>
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs font-medium mb-1.5 block">Identifiant</label>
+          <input type="text" name="username" required
+                 class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-cyan-500/60 transition"
+                 placeholder="jean.kone">
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs font-medium mb-1.5 block">Email</label>
+          <input type="email" name="email"
+                 class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-cyan-500/60 transition"
+                 placeholder="jean@traenergie.com">
+        </div>
+        <div x-data="{ showPwd: false }">
+          <label class="text-gray-400 text-xs font-medium mb-1.5 block">Mot de passe</label>
+          <div class="relative">
+            <input :type="showPwd ? 'text' : 'password'" name="password1" required
+                   class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 pr-10 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-cyan-500/60 transition"
+                   placeholder="••••••••">
+            <button type="button" @click="showPwd = !showPwd" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs font-medium mb-1.5 block">Confirmer le mot de passe</label>
+          <input type="password" name="password2" required
+                 class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-cyan-500/60 transition"
+                 placeholder="••••••••">
+        </div>
+
+        <button type="submit"
+                class="w-full flex items-center justify-center gap-2 py-3 bg-cyan-500 hover:bg-cyan-400 text-white font-semibold text-sm rounded-xl transition shadow-lg shadow-cyan-500/25 mt-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+          Créer mon compte
+        </button>
+      </form>
+
+      <div class="mt-5 pt-5 border-t border-white/5 text-center">
+        <p class="text-gray-500 text-xs">
+          Déjà un compte ?
+          <a href="{% url 'accounts:login' %}" class="text-cyan-400 hover:text-cyan-300 font-medium ml-1">Se connecter</a>
+        </p>
+      </div>
+    </div>
+
+    <p class="text-center text-gray-600 text-xs mt-6">
+      <a href="{% url 'website:home' %}" class="hover:text-gray-400 transition">← Retour au site web</a>
+    </p>
+  </div>
+</body>
+</html>

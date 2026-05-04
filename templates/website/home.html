@@ -1,0 +1,381 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Traenergie — Solutions Électriques & Équipements{% endblock %}
+
+{% block content %}
+
+<!-- ═══════════════════════════════════════════════
+     HERO SECTION
+════════════════════════════════════════════════ -->
+<section class="relative min-h-screen flex items-center overflow-hidden bg-[#0a0f1e]">
+
+  <!-- Animated background grid -->
+  <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(6,182,212,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.15) 1px, transparent 1px); background-size: 60px 60px;"></div>
+
+  <!-- Glow orbs -->
+  <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
+  <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-yellow-500/8 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 2s;"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+      <!-- Left: Text -->
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-400 text-xs font-medium mb-6" data-aos="fade-down">
+          <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span>
+          Expert en solutions électriques depuis {{ company.years_experience }} ans
+        </div>
+
+        <h1 class="font-display font-bold text-5xl lg:text-6xl xl:text-7xl leading-tight mb-6" data-aos="fade-up" data-aos-delay="100">
+          <span class="text-white">L'énergie qui</span><br>
+          <span class="relative">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">propulse</span>
+          </span><br>
+          <span class="text-white">votre projet</span>
+        </h1>
+
+        <p class="text-gray-400 text-lg leading-relaxed max-w-xl mb-8" data-aos="fade-up" data-aos-delay="200">
+          {{ company.tagline }}. Installation, maintenance, audit énergétique et vente d'équipements électriques professionnels.
+        </p>
+
+        <div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="300">
+          <a href="#contact" class="group flex items-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-white font-semibold rounded-xl transition shadow-lg shadow-cyan-500/30">
+            Demander un devis
+            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+          <a href="#services" class="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-medium rounded-xl transition">
+            Nos services
+          </a>
+        </div>
+
+        <!-- Stats row -->
+        <div class="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-white/10" data-aos="fade-up" data-aos-delay="400">
+          <div>
+            <div class="font-display font-bold text-3xl text-white">{{ company.projects_count }}+</div>
+            <div class="text-gray-500 text-sm mt-1">Projets réalisés</div>
+          </div>
+          <div>
+            <div class="font-display font-bold text-3xl text-white">{{ company.clients_count }}+</div>
+            <div class="text-gray-500 text-sm mt-1">Clients satisfaits</div>
+          </div>
+          <div>
+            <div class="font-display font-bold text-3xl text-white">{{ company.technicians_count }}</div>
+            <div class="text-gray-500 text-sm mt-1">Techniciens experts</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Visual electric bolt illustration -->
+      <div class="relative flex items-center justify-center" data-aos="fade-left" data-aos-delay="200">
+        <div class="relative w-80 h-80 lg:w-96 lg:h-96">
+          <!-- Outer ring -->
+          <div class="absolute inset-0 rounded-full border border-cyan-500/20 animate-spin" style="animation-duration: 20s;"></div>
+          <!-- Mid ring -->
+          <div class="absolute inset-8 rounded-full border border-cyan-500/30 animate-spin" style="animation-duration: 15s; animation-direction: reverse;"></div>
+          <!-- Inner ring -->
+          <div class="absolute inset-16 rounded-full border border-cyan-400/40"></div>
+
+          <!-- Center glowing icon -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="relative">
+              <div class="absolute inset-0 bg-cyan-500/20 rounded-full blur-2xl scale-150"></div>
+              <div class="relative w-36 h-36 flex items-center justify-center bg-gradient-to-br from-cyan-500/20 to-blue-600/20 rounded-full border border-cyan-500/30 backdrop-blur-sm">
+                <svg class="w-20 h-20 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating badges -->
+          <div class="absolute -top-4 -right-4 bg-navy-800 border border-white/10 rounded-xl px-3 py-2 text-xs text-white backdrop-blur-lg animate-float">
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+              Certification ISO
+            </div>
+          </div>
+          <div class="absolute -bottom-4 -left-4 bg-navy-800 border border-white/10 rounded-xl px-3 py-2 text-xs text-white backdrop-blur-lg animate-float" style="animation-delay: 3s;">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              Qualité garantie
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+    <span class="text-gray-500 text-xs tracking-widest uppercase">Défiler</span>
+    <div class="w-0.5 h-8 bg-gradient-to-b from-cyan-500 to-transparent"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     SERVICES SECTION
+════════════════════════════════════════════════ -->
+<section id="services" class="py-24 bg-[#0a0f1e]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="text-center mb-16" data-aos="fade-up">
+      <span class="text-cyan-400 text-sm font-medium tracking-widest uppercase">Ce que nous faisons</span>
+      <h2 class="font-display font-bold text-4xl lg:text-5xl text-white mt-3">Nos <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">services</span></h2>
+      <p class="text-gray-400 mt-4 max-w-xl mx-auto">Des solutions complètes pour vos besoins électriques, de l'installation à la maintenance.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for service in services %}
+      <div class="group relative bg-white/3 hover:bg-white/6 border border-white/8 hover:border-cyan-500/30 rounded-2xl p-6 transition-all duration-300 cursor-default" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+        <!-- Glow on hover -->
+        <div class="absolute inset-0 rounded-2xl bg-cyan-500/0 group-hover:bg-cyan-500/3 transition-all duration-300"></div>
+
+        <!-- Icon -->
+        <div class="relative w-12 h-12 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded-xl mb-5 group-hover:bg-cyan-500/20 transition">
+          <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {% if service.icon == "bolt" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            {% elif service.icon == "cpu" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2h-2M9 3h6M9 3v2m6-2v2"/>
+            {% elif service.icon == "shield" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            {% elif service.icon == "tool" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            {% elif service.icon == "zap" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            {% else %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            {% endif %}
+          </svg>
+        </div>
+
+        <h3 class="font-display font-semibold text-lg text-white mb-2 group-hover:text-cyan-400 transition">{{ service.title }}</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">{{ service.description }}</p>
+
+        <!-- Arrow -->
+        <div class="mt-5 flex items-center gap-1 text-cyan-400/0 group-hover:text-cyan-400 text-sm font-medium transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+          En savoir plus <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </div>
+      </div>
+      {% empty %}
+      <!-- Default services if DB is empty -->
+      {% for item in "123456" %}
+      <div class="group bg-white/3 hover:bg-white/6 border border-white/8 hover:border-cyan-500/30 rounded-2xl p-6 transition-all duration-300" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+        <div class="w-12 h-12 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded-xl mb-5">
+          <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-lg text-white mb-2">Service électrique</h3>
+        <p class="text-gray-400 text-sm">Description du service électrique professionnel proposé par Traenergie.</p>
+      </div>
+      {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     FEATURES / WHY US
+════════════════════════════════════════════════ -->
+<section class="py-24 bg-gradient-to-b from-[#0a0f1e] to-[#0f172a]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <div data-aos="fade-right">
+        <span class="text-cyan-400 text-sm font-medium tracking-widest uppercase">Pourquoi nous choisir</span>
+        <h2 class="font-display font-bold text-4xl text-white mt-3 mb-6">L'expertise électrique <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">au service de vos projets</span></h2>
+        <p class="text-gray-400 mb-8 leading-relaxed">Notre équipe de techniciens certifiés intervient sur tout type de chantier, du résidentiel à l'industriel, avec des solutions adaptées à votre budget.</p>
+        <div class="space-y-4">
+          {% for feat in "1234" %}
+          <div class="flex items-start gap-4">
+            <div class="w-8 h-8 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded-lg shrink-0 mt-0.5">
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <div>
+              {% if forloop.counter == 1 %}<h4 class="font-semibold text-white text-sm">Techniciens certifiés</h4><p class="text-gray-500 text-sm mt-1">Tous nos techniciens sont certifiés et formés aux dernières normes électriques.</p>
+              {% elif forloop.counter == 2 %}<h4 class="font-semibold text-white text-sm">Intervention rapide 24h/7j</h4><p class="text-gray-500 text-sm mt-1">Une équipe disponible à tout moment pour les urgences électriques.</p>
+              {% elif forloop.counter == 3 %}<h4 class="font-semibold text-white text-sm">Équipements de qualité</h4><p class="text-gray-500 text-sm mt-1">Nous utilisons et commercialisons uniquement des équipements certifiés et durables.</p>
+              {% else %}<h4 class="font-semibold text-white text-sm">Garantie sur les travaux</h4><p class="text-gray-500 text-sm mt-1">Tous nos travaux sont garantis avec un suivi post-installation inclus.</p>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4" data-aos="fade-left">
+        {% for stat in "1234" %}
+        <div class="bg-white/3 border border-white/8 rounded-2xl p-6 text-center">
+          {% if forloop.counter == 1 %}
+          <div class="text-4xl font-display font-bold text-cyan-400 mb-1">{{ company.years_experience }}+</div>
+          <div class="text-gray-400 text-sm">Années d'expérience</div>
+          {% elif forloop.counter == 2 %}
+          <div class="text-4xl font-display font-bold text-yellow-400 mb-1">99%</div>
+          <div class="text-gray-400 text-sm">Clients satisfaits</div>
+          {% elif forloop.counter == 3 %}
+          <div class="text-4xl font-display font-bold text-green-400 mb-1">24/7</div>
+          <div class="text-gray-400 text-sm">Support disponible</div>
+          {% else %}
+          <div class="text-4xl font-display font-bold text-purple-400 mb-1">ISO</div>
+          <div class="text-gray-400 text-sm">Certifié qualité</div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     PROJETS SECTION
+════════════════════════════════════════════════ -->
+{% if projects %}
+<section id="projets" class="py-24 bg-[#0f172a]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16" data-aos="fade-up">
+      <span class="text-cyan-400 text-sm font-medium tracking-widest uppercase">Nos réalisations</span>
+      <h2 class="font-display font-bold text-4xl lg:text-5xl text-white mt-3">Projets <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">réalisés</span></h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for project in projects %}
+      <div class="group bg-white/3 border border-white/8 rounded-2xl overflow-hidden hover:border-cyan-500/30 transition-all duration-300" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+        {% if project.image %}
+        <div class="aspect-video overflow-hidden">
+          <img src="{{ project.image.url }}" alt="{{ project.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        </div>
+        {% else %}
+        <div class="aspect-video bg-gradient-to-br from-cyan-500/10 to-blue-600/10 flex items-center justify-center">
+          <svg class="w-12 h-12 text-cyan-500/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        {% endif %}
+        <div class="p-5">
+          <span class="text-xs text-cyan-400 font-medium uppercase tracking-wide">{{ project.get_category_display }}</span>
+          <h3 class="font-semibold text-white text-base mt-1 mb-2">{{ project.title }}</h3>
+          <p class="text-gray-400 text-sm line-clamp-2">{{ project.description }}</p>
+          {% if project.client %}<p class="text-gray-600 text-xs mt-3">Client : {{ project.client }}</p>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+
+<!-- ═══════════════════════════════════════════════
+     TESTIMONIALS
+════════════════════════════════════════════════ -->
+{% if testimonials %}
+<section id="temoignages" class="py-24 bg-[#0a0f1e]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16" data-aos="fade-up">
+      <span class="text-cyan-400 text-sm font-medium tracking-widest uppercase">Ce que disent nos clients</span>
+      <h2 class="font-display font-bold text-4xl text-white mt-3">Témoignages</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for t in testimonials %}
+      <div class="bg-white/3 border border-white/8 rounded-2xl p-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+        <!-- Stars -->
+        <div class="flex gap-1 mb-4">
+          {% for i in "12345" %}
+          <svg class="w-4 h-4 {% if forloop.counter <= t.rating %}text-yellow-400{% else %}text-gray-600{% endif %}" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          {% endfor %}
+        </div>
+        <p class="text-gray-300 text-sm leading-relaxed italic mb-5">"{{ t.content }}"</p>
+        <div class="flex items-center gap-3 border-t border-white/5 pt-4">
+          {% if t.author_image %}
+          <img src="{{ t.author_image.url }}" class="w-10 h-10 rounded-full object-cover" alt="{{ t.author_name }}">
+          {% else %}
+          <div class="w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold text-sm">{{ t.author_name|first|upper }}</div>
+          {% endif %}
+          <div>
+            <div class="text-white font-medium text-sm">{{ t.author_name }}</div>
+            <div class="text-gray-500 text-xs">{{ t.author_company }}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+
+<!-- ═══════════════════════════════════════════════
+     CONTACT SECTION
+════════════════════════════════════════════════ -->
+<section id="contact" class="py-24 bg-gradient-to-b from-[#0f172a] to-[#0a0f1e]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+
+      <!-- Left -->
+      <div data-aos="fade-right">
+        <span class="text-cyan-400 text-sm font-medium tracking-widest uppercase">Contactez-nous</span>
+        <h2 class="font-display font-bold text-4xl text-white mt-3 mb-6">Parlons de <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">votre projet</span></h2>
+        <p class="text-gray-400 mb-10">Notre équipe est à votre disposition pour étudier vos besoins et vous proposer la meilleure solution électrique.</p>
+        <div class="space-y-5">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded-xl shrink-0">
+              <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            </div>
+            <div>
+              <div class="text-gray-500 text-xs">Téléphone</div>
+              <div class="text-white font-medium">{{ company.phone|default:"+225 07 00 00 00 00" }}</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded-xl shrink-0">
+              <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <div>
+              <div class="text-gray-500 text-xs">Email</div>
+              <div class="text-white font-medium">{{ company.email|default:"contact@traenergie.com" }}</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded-xl shrink-0">
+              <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <div>
+              <div class="text-gray-500 text-xs">Adresse</div>
+              <div class="text-white font-medium">{{ company.address|default:"Abidjan, Côte d'Ivoire" }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div class="bg-white/3 border border-white/8 rounded-2xl p-8" data-aos="fade-left">
+        <h3 class="font-display font-semibold text-xl text-white mb-6">Demande de devis gratuit</h3>
+        <form method="post" action="{% url 'website:contact' %}">
+          {% csrf_token %}
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="text-gray-400 text-xs mb-1.5 block">Nom complet *</label>
+              {{ contact_form.name }}
+            </div>
+            <div>
+              <label class="text-gray-400 text-xs mb-1.5 block">Email *</label>
+              {{ contact_form.email }}
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="text-gray-400 text-xs mb-1.5 block">Téléphone</label>
+              {{ contact_form.phone }}
+            </div>
+            <div>
+              <label class="text-gray-400 text-xs mb-1.5 block">Sujet *</label>
+              {{ contact_form.subject }}
+            </div>
+          </div>
+          <div class="mb-6">
+            <label class="text-gray-400 text-xs mb-1.5 block">Message *</label>
+            {{ contact_form.message }}
+          </div>
+          <button type="submit" class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-white font-semibold rounded-xl transition shadow-lg shadow-cyan-500/25">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            Envoyer le message
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

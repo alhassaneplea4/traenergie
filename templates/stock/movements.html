@@ -1,0 +1,106 @@
+{% extends "base_dashboard.html" %}
+{% load humanize %}
+
+{% block title %}Mouvements de stock — Traenergie{% endblock %}
+{% block page_title %}Mouvements de stock{% endblock %}
+{% block page_subtitle %}Historique des entrées et sorties d'inventaire{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+  <!-- Movement form -->
+  <div class="xl:col-span-1">
+    <div class="bg-card border border-white/8 rounded-2xl p-5 sticky top-20">
+      <h3 class="font-semibold text-white text-sm mb-5 flex items-center gap-2">
+        <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        Enregistrer un mouvement
+      </h3>
+      <form method="post" action="{% url 'dashboard:stock_movements' %}" class="space-y-4">
+        {% csrf_token %}
+        <div>
+          <label class="text-gray-400 text-xs mb-1.5 block">Produit *</label>
+          {{ form.product }}
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs mb-1.5 block">Type de mouvement *</label>
+          {{ form.movement_type }}
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs mb-1.5 block">Quantité *</label>
+          {{ form.quantity }}
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs mb-1.5 block">Motif</label>
+          {{ form.reason }}
+        </div>
+        <button type="submit"
+                class="w-full flex items-center justify-center gap-2 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-white text-sm font-semibold rounded-xl transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          Enregistrer
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- History table -->
+  <div class="xl:col-span-2">
+    <div class="bg-card border border-white/8 rounded-2xl overflow-hidden">
+      <div class="px-5 py-4 border-b border-white/5">
+        <h3 class="font-semibold text-white text-sm">Historique des 50 derniers mouvements</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-white/5 bg-white/2">
+              <th class="text-left px-4 py-3 text-gray-500 font-medium text-xs uppercase tracking-wide">Type</th>
+              <th class="text-left px-4 py-3 text-gray-500 font-medium text-xs uppercase tracking-wide">Produit</th>
+              <th class="text-center px-4 py-3 text-gray-500 font-medium text-xs uppercase tracking-wide">Qté</th>
+              <th class="text-left px-4 py-3 text-gray-500 font-medium text-xs uppercase tracking-wide hidden md:table-cell">Motif</th>
+              <th class="text-left px-4 py-3 text-gray-500 font-medium text-xs uppercase tracking-wide hidden sm:table-cell">Par</th>
+              <th class="text-left px-4 py-3 text-gray-500 font-medium text-xs uppercase tracking-wide">Date</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/4">
+            {% for mv in movements %}
+            <tr class="hover:bg-white/2 transition">
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold
+                  {% if mv.movement_type == 'in' %}bg-green-500/15 text-green-400
+                  {% elif mv.movement_type == 'out' %}bg-red-500/15 text-red-400
+                  {% elif mv.movement_type == 'return' %}bg-blue-500/15 text-blue-400
+                  {% else %}bg-yellow-500/15 text-yellow-400{% endif %}">
+                  {% if mv.movement_type == 'in' %}↑ Entrée
+                  {% elif mv.movement_type == 'out' %}↓ Sortie
+                  {% elif mv.movement_type == 'return' %}↩ Retour
+                  {% else %}⟳ Ajustement{% endif %}
+                </span>
+              </td>
+              <td class="px-4 py-3">
+                <p class="text-white text-sm font-medium">{{ mv.product.name }}</p>
+                <p class="text-gray-600 text-xs font-mono">{{ mv.product.sku }}</p>
+              </td>
+              <td class="px-4 py-3 text-center">
+                <span class="font-semibold text-sm
+                  {% if mv.movement_type == 'in' or mv.movement_type == 'return' %}text-green-400{% elif mv.movement_type == 'out' %}text-red-400{% else %}text-yellow-400{% endif %}">
+                  {% if mv.movement_type == 'in' or mv.movement_type == 'return' %}+{% elif mv.movement_type == 'out' %}−{% endif %}{{ mv.quantity }}
+                </span>
+              </td>
+              <td class="px-4 py-3 text-gray-400 text-xs hidden md:table-cell max-w-32 truncate">{{ mv.reason|default:"—" }}</td>
+              <td class="px-4 py-3 text-gray-400 text-xs hidden sm:table-cell">{{ mv.created_by.username|default:"système" }}</td>
+              <td class="px-4 py-3 text-gray-500 text-xs">{{ mv.created_at|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" class="py-16 text-center text-gray-600">
+                <svg class="w-10 h-10 mx-auto mb-2 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+                <p>Aucun mouvement enregistré</p>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

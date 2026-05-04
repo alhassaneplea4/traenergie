@@ -1,0 +1,80 @@
+{% load humanize %}
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h3 class="font-display font-semibold text-lg text-white">Modifier le produit</h3>
+    <p class="text-gray-500 text-xs mt-0.5">{{ product.name }}</p>
+  </div>
+  <button onclick="document.getElementById('modal-edit-product').classList.add('hidden')"
+          class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  </button>
+</div>
+
+<form method="post" action="{% url 'dashboard:product_edit' product.pk %}" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="grid grid-cols-2 gap-4">
+    <div class="col-span-2">
+      <label class="text-gray-400 text-xs mb-1.5 block">Nom du produit *</label>
+      {{ form.name }}
+    </div>
+    <div>
+      <label class="text-gray-400 text-xs mb-1.5 block">Référence SKU *</label>
+      {{ form.sku }}
+    </div>
+    <div>
+      <label class="text-gray-400 text-xs mb-1.5 block">Catégorie *</label>
+      {{ form.category }}
+    </div>
+    <div>
+      <label class="text-gray-400 text-xs mb-1.5 block">Unité</label>
+      {{ form.unit }}
+    </div>
+    <div>
+      <label class="text-gray-400 text-xs mb-1.5 block">Fournisseur</label>
+      {{ form.supplier }}
+    </div>
+    <div>
+      <label class="text-gray-400 text-xs mb-1.5 block">Prix unitaire (FCFA) *</label>
+      {{ form.unit_price }}
+    </div>
+    <div>
+      <label class="text-gray-400 text-xs mb-1.5 block">Quantité en stock</label>
+      {{ form.quantity_in_stock }}
+    </div>
+    <div>
+      <label class="text-gray-400 text-xs mb-1.5 block">Stock minimum d'alerte</label>
+      {{ form.min_stock_level }}
+    </div>
+    <div>
+      <label class="text-gray-400 text-xs mb-1.5 block">
+        Image
+        {% if product.image %}
+        <span class="text-cyan-500 ml-1">(actuelle : {{ product.image.name|truncatechars:20 }})</span>
+        {% endif %}
+      </label>
+      {{ form.image }}
+    </div>
+    <div class="col-span-2">
+      <label class="text-gray-400 text-xs mb-1.5 block">Description</label>
+      {{ form.description }}
+    </div>
+    <div class="col-span-2 flex items-center gap-2">
+      {{ form.is_active }}
+      <label class="text-gray-300 text-sm">Produit actif</label>
+    </div>
+  </div>
+
+  <div class="flex gap-3 mt-6 pt-4 border-t border-white/5">
+    <button type="button"
+            onclick="document.getElementById('modal-edit-product').classList.add('hidden')"
+            class="flex-1 px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 text-sm font-medium rounded-xl transition">
+      Annuler
+    </button>
+    <button type="submit"
+            class="flex-1 px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-white text-sm font-semibold rounded-xl transition shadow-lg shadow-cyan-500/20">
+      Enregistrer les modifications
+    </button>
+  </div>
+</form>
