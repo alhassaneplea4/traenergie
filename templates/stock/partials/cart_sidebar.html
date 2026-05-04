@@ -24,7 +24,7 @@
         </div>
         <div class="flex-1 min-w-0">
           <p class="text-white text-xs font-medium truncate">{{ item.product.name }}</p>
-          <p class="text-gray-500 text-xs">{{ item.product.unit_price|floatformat:0|intcomma }} FCFA/u</p>
+          <p class="text-gray-500 text-xs">{{ item.product.unit_price|floatformat:0|intcomma }} GNF/u</p>
         </div>
         <!-- Qty controls -->
         <div class="flex items-center gap-1 shrink-0">
@@ -76,7 +76,7 @@
     </div>
     <div class="flex items-center justify-between border-t border-white/5 pt-3">
       <span class="text-gray-400 text-sm font-medium">Total</span>
-      <span class="text-white font-bold text-lg">{{ cart.total_price|floatformat:0|intcomma }} <span class="text-gray-500 text-sm font-normal">FCFA</span></span>
+      <span class="text-white font-bold text-lg">{{ cart.total_price|floatformat:0|intcomma }} <span class="text-gray-500 text-sm font-normal">GNF</span></span>
     </div>
     <form method="post" action="{% url 'dashboard:cart_checkout' %}">
       {% csrf_token %}

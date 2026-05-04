@@ -86,7 +86,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = "fr-fr"
-TIME_ZONE = "Africa/Abidjan"
+TIME_ZONE = "Africa/Conakry"
 USE_I18N = True
 USE_TZ = True
 
@@ -111,4 +111,4 @@ CRISPY_TEMPLATE_PACK = "tailwind"
 EMAIL_BACKEND = os.getenv(
     "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
 )
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Traenergie <noreply@traenergie.com>")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Traenergie <traenergie@gmail.com>")

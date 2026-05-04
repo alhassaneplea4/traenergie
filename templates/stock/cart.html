@@ -42,7 +42,7 @@
         <h4 class="text-white text-sm font-medium mb-1 line-clamp-2 leading-tight">{{ product.name }}</h4>
         <p class="text-gray-500 text-xs mb-3 font-mono">{{ product.sku }}</p>
         <div class="flex items-center justify-between">
-          <span class="text-cyan-400 font-semibold text-sm">{{ product.unit_price|floatformat:0|intcomma }} <span class="text-gray-600 font-normal text-xs">FCFA</span></span>
+          <span class="text-cyan-400 font-semibold text-sm">{{ product.unit_price|floatformat:0|intcomma }} <span class="text-gray-600 font-normal text-xs">GNF</span></span>
           <button hx-post="{% url 'dashboard:cart_add' product.id %}"
                   hx-target="#cart-panel"
                   hx-swap="innerHTML"

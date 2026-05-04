@@ -67,7 +67,7 @@ class Product(models.Model):
     sku = models.CharField(max_length=100, unique=True, verbose_name="Référence SKU")
     description = models.TextField(blank=True, verbose_name="Description")
     image = models.ImageField(upload_to="products/", blank=True, null=True, verbose_name="Image")
-    unit_price = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Prix unitaire (FCFA)")
+    unit_price = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Prix unitaire (GNF)")
     quantity_in_stock = models.PositiveIntegerField(default=0, verbose_name="Quantité en stock")
     min_stock_level = models.PositiveIntegerField(default=5, verbose_name="Stock minimum d'alerte")
     is_active = models.BooleanField(default=True, verbose_name="Actif")

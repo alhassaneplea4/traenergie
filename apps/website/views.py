@@ -18,6 +18,15 @@ class HomeView(View):
         return render(request, "website/home.html", context)
 
 
+class ServicesPageView(View):
+    def get(self, request):
+        context = {
+            "company": CompanyInfo.get_instance(),
+            "services": Service.objects.filter(is_active=True),
+        }
+        return render(request, "website/services.html", context)
+
+
 class ContactView(View):
     def post(self, request):
         form = ContactForm(request.POST)

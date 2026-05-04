@@ -13,6 +13,12 @@ class Service(models.Model):
     icon = models.CharField(max_length=50, choices=ICON_CHOICES, default="bolt")
     title = models.CharField(max_length=150)
     description = models.TextField()
+    detail_content = models.TextField(
+        blank=True,
+        verbose_name="Contenu détaillé",
+        help_text="Description longue affichée sur la page détail. Chaque ligne vide crée un nouveau paragraphe.",
+    )
+    image = models.ImageField(upload_to="services/", blank=True, null=True, verbose_name="Image")
     color = models.CharField(max_length=20, default="cyan")
     order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)

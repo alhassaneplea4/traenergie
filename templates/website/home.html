@@ -128,9 +128,11 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {% for service in services %}
-      <div class="group relative bg-white/3 hover:bg-white/6 border border-white/8 hover:border-cyan-500/30 rounded-2xl p-6 transition-all duration-300 cursor-default" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+      <a href="{% url 'website:services' %}#service-{{ service.id }}"
+         class="group relative bg-white/3 hover:bg-white/6 border border-white/8 hover:border-cyan-500/30 rounded-2xl p-6 transition-all duration-300 block"
+         data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
         <!-- Glow on hover -->
-        <div class="absolute inset-0 rounded-2xl bg-cyan-500/0 group-hover:bg-cyan-500/3 transition-all duration-300"></div>
+        <div class="absolute inset-0 rounded-2xl bg-cyan-500/0 group-hover:bg-cyan-500/3 transition-all duration-300 pointer-events-none"></div>
 
         <!-- Icon -->
         <div class="relative w-12 h-12 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded-xl mb-5 group-hover:bg-cyan-500/20 transition">
@@ -149,10 +151,10 @@
         <p class="text-gray-400 text-sm leading-relaxed">{{ service.description }}</p>
 
         <!-- Arrow -->
-        <div class="mt-5 flex items-center gap-1 text-cyan-400/0 group-hover:text-cyan-400 text-sm font-medium transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+        <div class="mt-5 flex items-center gap-1 text-cyan-400/50 group-hover:text-cyan-400 text-sm font-medium transition-all duration-300 translate-y-1 group-hover:translate-y-0">
           En savoir plus <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
         </div>
-      </div>
+      </a>
       {% empty %}
       <!-- Default services if DB is empty -->
       {% for item in "123456" %}
@@ -258,38 +260,131 @@
 
 
 <!-- ═══════════════════════════════════════════════
-     TESTIMONIALS
+     TESTIMONIALS — SLIDER
 ════════════════════════════════════════════════ -->
 {% if testimonials %}
-<section id="temoignages" class="py-24 bg-[#0a0f1e]">
+<section id="temoignages" class="py-24 bg-[#0a0f1e] overflow-hidden">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
     <div class="text-center mb-16" data-aos="fade-up">
       <span class="text-cyan-400 text-sm font-medium tracking-widest uppercase">Ce que disent nos clients</span>
-      <h2 class="font-display font-bold text-4xl text-white mt-3">Témoignages</h2>
+      <h2 class="font-display font-bold text-4xl text-white mt-3">
+        Ils nous font <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">confiance</span>
+      </h2>
+      <p class="text-gray-400 mt-4 max-w-xl mx-auto">La satisfaction de nos clients est notre plus grande récompense.</p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {% for t in testimonials %}
-      <div class="bg-white/3 border border-white/8 rounded-2xl p-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
-        <!-- Stars -->
-        <div class="flex gap-1 mb-4">
-          {% for i in "12345" %}
-          <svg class="w-4 h-4 {% if forloop.counter <= t.rating %}text-yellow-400{% else %}text-gray-600{% endif %}" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          {% endfor %}
-        </div>
-        <p class="text-gray-300 text-sm leading-relaxed italic mb-5">"{{ t.content }}"</p>
-        <div class="flex items-center gap-3 border-t border-white/5 pt-4">
-          {% if t.author_image %}
-          <img src="{{ t.author_image.url }}" class="w-10 h-10 rounded-full object-cover" alt="{{ t.author_name }}">
-          {% else %}
-          <div class="w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold text-sm">{{ t.author_name|first|upper }}</div>
-          {% endif %}
-          <div>
-            <div class="text-white font-medium text-sm">{{ t.author_name }}</div>
-            <div class="text-gray-500 text-xs">{{ t.author_company }}</div>
+
+    <!-- Alpine.js slider -->
+    <div
+      x-data="{
+        current: 0,
+        total: {{ testimonials|length }},
+        timer: null,
+        prev() { this.current = (this.current - 1 + this.total) % this.total; },
+        next() { this.current = (this.current + 1) % this.total; },
+        goTo(i) { this.current = i; },
+        start() { this.timer = setInterval(() => this.next(), 5000); },
+        stop()  { clearInterval(this.timer); }
+      }"
+      x-init="start()"
+      @mouseenter="stop()"
+      @mouseleave="start()"
+      class="relative"
+      data-aos="fade-up"
+      data-aos-delay="100"
+    >
+
+      <!-- Quote mark décoration -->
+      <div class="absolute -top-4 left-1/2 -translate-x-1/2 text-cyan-500/10 pointer-events-none select-none" aria-hidden="true">
+        <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+      </div>
+
+      <!-- Slides wrapper — hauteur fixe pour que les slides absolus s'affichent -->
+      <div class="relative" style="min-height: 280px;">
+        {% for t in testimonials %}
+        <div
+          x-show="current === {{ forloop.counter0 }}"
+          x-transition:enter="transition ease-out duration-500"
+          x-transition:enter-start="opacity-0 scale-95"
+          x-transition:enter-end="opacity-100 scale-100"
+          x-transition:leave="transition ease-in duration-300"
+          x-transition:leave-start="opacity-100 scale-100"
+          x-transition:leave-end="opacity-0 scale-95"
+          class="{% if not forloop.first %}absolute inset-0{% endif %} w-full"
+        >
+          <!-- Card centrale -->
+          <div class="max-w-3xl mx-auto">
+            <div class="bg-white/3 border border-white/10 rounded-3xl p-8 lg:p-12 text-center shadow-2xl shadow-black/30">
+
+              <!-- Stars -->
+              <div class="flex justify-center gap-1.5 mb-6">
+                {% for i in "12345" %}
+                <svg class="w-5 h-5 {% if forloop.counter <= t.rating %}text-yellow-400{% else %}text-gray-700{% endif %}" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+                {% endfor %}
+              </div>
+
+              <!-- Quote -->
+              <p class="text-gray-200 text-lg lg:text-xl leading-relaxed italic mb-8">
+                "{{ t.content }}"
+              </p>
+
+              <!-- Author -->
+              <div class="flex items-center justify-center gap-4">
+                {% if t.author_image %}
+                <img src="{{ t.author_image.url }}" class="w-14 h-14 rounded-full object-cover ring-2 ring-cyan-500/30" alt="{{ t.author_name }}">
+                {% else %}
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-500/30 to-blue-600/30 border border-cyan-500/30 flex items-center justify-center text-cyan-300 font-bold text-xl shrink-0">
+                  {{ t.author_name|first|upper }}
+                </div>
+                {% endif %}
+                <div class="text-left">
+                  <div class="text-white font-semibold text-base">{{ t.author_name }}</div>
+                  {% if t.author_company %}<div class="text-cyan-400/70 text-sm">{{ t.author_company }}</div>{% endif %}
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
+
+      <!-- Navigation arrows -->
+      <button
+        @click="prev()"
+        class="absolute left-0 lg:-left-8 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center bg-white/5 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-500/30 rounded-full text-gray-400 hover:text-cyan-400 transition-all duration-200 z-20"
+        aria-label="Précédent"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+
+      <button
+        @click="next()"
+        class="absolute right-0 lg:-right-8 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center bg-white/5 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-500/30 rounded-full text-gray-400 hover:text-cyan-400 transition-all duration-200 z-20"
+        aria-label="Suivant"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+
+      <!-- Dot indicators -->
+      <div class="flex justify-center gap-2 mt-8">
+        {% for t in testimonials %}
+        <button
+          @click="goTo({{ forloop.counter0 }})"
+          :class="current === {{ forloop.counter0 }} ? 'bg-cyan-400 w-6' : 'bg-white/20 hover:bg-white/40 w-2'"
+          class="h-2 rounded-full transition-all duration-300"
+          aria-label="Témoignage {{ forloop.counter }}"
+        ></button>
+        {% endfor %}
+      </div>
+
+      <!-- Counter -->
+      <div class="text-center mt-3 text-gray-600 text-xs font-mono">
+        <span x-text="current + 1"></span>&nbsp;/&nbsp;{{ testimonials|length }}
+      </div>
+
     </div>
   </div>
 </section>
@@ -315,7 +410,7 @@
             </div>
             <div>
               <div class="text-gray-500 text-xs">Téléphone</div>
-              <div class="text-white font-medium">{{ company.phone|default:"+225 07 00 00 00 00" }}</div>
+              <div class="text-white font-medium">{{ company.phone|default:"+224 664 35 85 46" }}</div>
             </div>
           </div>
           <div class="flex items-center gap-4">
@@ -324,7 +419,7 @@
             </div>
             <div>
               <div class="text-gray-500 text-xs">Email</div>
-              <div class="text-white font-medium">{{ company.email|default:"contact@traenergie.com" }}</div>
+              <div class="text-white font-medium">{{ company.email|default:"traenergie@gmail.com" }}</div>
             </div>
           </div>
           <div class="flex items-center gap-4">
@@ -333,7 +428,7 @@
             </div>
             <div>
               <div class="text-gray-500 text-xs">Adresse</div>
-              <div class="text-white font-medium">{{ company.address|default:"Abidjan, Côte d'Ivoire" }}</div>
+              <div class="text-white font-medium">{{ company.address|default:"Sonfonia, Conakry, Guinée" }}</div>
             </div>
           </div>
         </div>

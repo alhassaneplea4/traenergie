@@ -16,7 +16,7 @@ class ContactForm(forms.ModelForm):
                 "class": "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition",
             }),
             "phone": forms.TextInput(attrs={
-                "placeholder": "+225 00 00 00 00",
+                "placeholder": "+224 00 00 00 00",
                 "class": "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition",
             }),
             "subject": forms.TextInput(attrs={

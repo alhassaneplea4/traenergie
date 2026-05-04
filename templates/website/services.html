@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Nos Services — Traenergie{% endblock %}
+{% block meta_description %}Découvrez en détail tous les services électriques proposés par Traenergie : installation, maintenance, audit énergétique et plus encore.{% endblock %}
+
+{% block content %}
+
+<!-- ═══════════════════════════════════════════════
+     HERO MINI
+════════════════════════════════════════════════ -->
+<section class="relative pt-32 pb-16 bg-[#0a0f1e] overflow-hidden">
+  <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(6,182,212,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.15) 1px, transparent 1px); background-size: 60px 60px;"></div>
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-64 bg-cyan-500/8 rounded-full blur-3xl"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-gray-500 mb-8" data-aos="fade-down">
+      <a href="{% url 'website:home' %}" class="hover:text-cyan-400 transition">Accueil</a>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      <span class="text-cyan-400">Nos services</span>
+    </nav>
+
+    <div class="max-w-3xl" data-aos="fade-up">
+      <span class="text-cyan-400 text-sm font-medium tracking-widest uppercase">Ce que nous faisons</span>
+      <h1 class="font-display font-bold text-5xl lg:text-6xl text-white mt-3 mb-6">
+        Nos <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">services</span>
+      </h1>
+      <p class="text-gray-400 text-lg leading-relaxed">
+        Traenergie vous offre une gamme complète de solutions électriques adaptées à vos besoins — du résidentiel à l'industriel. Explorez chaque service ci-dessous.
+      </p>
+    </div>
+
+    <!-- Quick nav pills -->
+    <div class="flex flex-wrap gap-3 mt-10" data-aos="fade-up" data-aos-delay="100">
+      {% for service in services %}
+      <a href="#service-{{ service.id }}"
+         class="group flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-500/30 rounded-full text-sm text-gray-400 hover:text-cyan-400 transition-all duration-200">
+        <span class="w-1.5 h-1.5 bg-cyan-500/50 group-hover:bg-cyan-400 rounded-full transition"></span>
+        {{ service.title }}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     SERVICES — UNE SECTION PAR SERVICE
+════════════════════════════════════════════════ -->
+{% for service in services %}
+<section
+  id="service-{{ service.id }}"
+  class="relative py-24 {% if forloop.counter|divisibleby:2 %}bg-[#0f172a]{% else %}bg-[#0a0f1e]{% endif %} overflow-hidden scroll-mt-20"
+>
+  <!-- Ambient glow -->
+  <div class="absolute {% if forloop.counter|divisibleby:2 %}right-0 top-0{% else %}left-0 bottom-0{% endif %} w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="grid lg:grid-cols-2 gap-16 items-center {% if forloop.counter|divisibleby:2 %}lg:flex-row-reverse{% endif %}">
+
+      <!-- Visual column -->
+      <div class="{% if forloop.counter|divisibleby:2 %}order-last lg:order-first{% endif %} flex items-center justify-center" data-aos="{% if forloop.counter|divisibleby:2 %}fade-right{% else %}fade-left{% endif %}">
+        {% if service.image %}
+        <div class="relative w-full max-w-md rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-cyan-900/20">
+          <img src="{{ service.image.url }}" alt="{{ service.title }}" class="w-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0a0f1e]/60 to-transparent"></div>
+        </div>
+        {% else %}
+        <!-- Decorative illustration quand pas d'image -->
+        <div class="relative w-72 h-72 lg:w-80 lg:h-80">
+          <!-- Rings -->
+          <div class="absolute inset-0 rounded-full border border-cyan-500/15 animate-spin" style="animation-duration: 25s;"></div>
+          <div class="absolute inset-6 rounded-full border border-cyan-500/20 animate-spin" style="animation-duration: 18s; animation-direction: reverse;"></div>
+          <div class="absolute inset-14 rounded-full border border-cyan-400/25"></div>
+          <!-- Number badge -->
+          <div class="absolute -top-3 -right-3 w-10 h-10 bg-cyan-500/10 border border-cyan-500/30 rounded-full flex items-center justify-center text-cyan-400 font-display font-bold text-lg">
+            {{ forloop.counter }}
+          </div>
+          <!-- Center icon -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="relative">
+              <div class="absolute inset-0 bg-cyan-500/15 rounded-full blur-xl scale-150"></div>
+              <div class="relative w-32 h-32 flex items-center justify-center bg-gradient-to-br from-cyan-500/15 to-blue-600/15 rounded-full border border-cyan-500/25 backdrop-blur-sm">
+                <svg class="w-16 h-16 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {% if service.icon == "bolt" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  {% elif service.icon == "cpu" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2h-2M9 3h6M9 3v2m6-2v2"/>
+                  {% elif service.icon == "shield" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                  {% elif service.icon == "tool" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  {% elif service.icon == "zap" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  {% else %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                  {% endif %}
+                </svg>
+              </div>
+            </div>
+          </div>
+          <!-- Dots -->
+          <div class="absolute top-1/4 right-0 w-2 h-2 bg-cyan-400/60 rounded-full animate-float" style="animation-delay: 0s;"></div>
+          <div class="absolute bottom-1/4 left-0 w-1.5 h-1.5 bg-blue-400/60 rounded-full animate-float" style="animation-delay: 2s;"></div>
+          <div class="absolute bottom-0 right-1/4 w-1.5 h-1.5 bg-yellow-400/40 rounded-full animate-float" style="animation-delay: 4s;"></div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Content column -->
+      <div data-aos="{% if forloop.counter|divisibleby:2 %}fade-left{% else %}fade-right{% endif %}">
+
+        <!-- Service number + icon badge -->
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-12 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/25 rounded-xl">
+            <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {% if service.icon == "bolt" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              {% elif service.icon == "cpu" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2h-2M9 3h6M9 3v2m6-2v2"/>
+              {% elif service.icon == "shield" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              {% elif service.icon == "tool" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              {% elif service.icon == "zap" %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              {% else %}<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              {% endif %}
+            </svg>
+          </div>
+          <span class="text-cyan-400/60 text-sm font-mono">SERVICE {{ forloop.counter|stringformat:"02d" }}</span>
+        </div>
+
+        <h2 class="font-display font-bold text-4xl lg:text-5xl text-white mb-5">
+          {{ service.title }}
+        </h2>
+
+        <p class="text-gray-300 text-lg leading-relaxed mb-6">
+          {{ service.description }}
+        </p>
+
+        {% if service.detail_content %}
+        <div class="text-gray-400 leading-relaxed space-y-4 mb-8">
+          {{ service.detail_content|linebreaksbr }}
+        </div>
+        {% else %}
+        <!-- Avantages génériques si pas de contenu détaillé -->
+        <ul class="space-y-3 mb-8">
+          {% if service.icon == "bolt" or service.icon == "zap" %}
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Dimensionnement et calcul des installations électriques</span></li>
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Mise aux normes et certification des travaux réalisés</span></li>
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Intervention rapide avec garantie sur les travaux</span></li>
+          {% elif service.icon == "tool" %}
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Diagnostic complet et préventif de vos installations</span></li>
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Contrats de maintenance préventive et curative disponibles</span></li>
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Disponibilité 24h/7j pour les pannes urgentes</span></li>
+          {% elif service.icon == "shield" %}
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Analyse des risques électriques et mise en conformité</span></li>
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Installation de dispositifs de protection et parafoudres</span></li>
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Rapports de conformité certifiés et traçabilité complète</span></li>
+          {% elif service.icon == "cpu" %}
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Systèmes de commande et de régulation automatisés</span></li>
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Intégration de solutions domotiques et supervision à distance</span></li>
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Réduction des coûts énergétiques grâce à l'automatisation</span></li>
+          {% else %}
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Expertise technique qualifiée et équipe certifiée</span></li>
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Solutions personnalisées adaptées à chaque projet</span></li>
+          <li class="flex items-start gap-3"><div class="w-5 h-5 mt-0.5 flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 rounded shrink-0"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><span class="text-gray-400 text-sm">Délais maîtrisés et suivi rigoureux du chantier</span></li>
+          {% endif %}
+        </ul>
+        {% endif %}
+
+        <!-- CTA -->
+        <div class="flex flex-wrap gap-3">
+          <a href="{% url 'website:home' %}#contact"
+             class="group inline-flex items-center gap-2 px-5 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-white font-semibold rounded-xl transition shadow-lg shadow-cyan-500/25 text-sm">
+            Demander un devis
+            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+          <a href="{% url 'website:home' %}#services"
+             class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-gray-300 hover:text-white font-medium rounded-xl transition text-sm">
+            ← Retour aux services
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {% if not forloop.last %}
+  <!-- Separator -->
+  <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-px h-12 bg-gradient-to-b from-cyan-500/30 to-transparent"></div>
+  {% endif %}
+</section>
+{% endfor %}
+
+
+<!-- ═══════════════════════════════════════════════
+     CTA FINAL
+════════════════════════════════════════════════ -->
+<section class="py-20 bg-[#0a0f1e]">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-400 text-xs font-medium mb-6">
+      <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span>
+      Prêt à démarrer ?
+    </div>
+    <h2 class="font-display font-bold text-4xl text-white mb-4">
+      Un projet en tête ?<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">Parlons-en.</span>
+    </h2>
+    <p class="text-gray-400 mb-8 text-lg">Notre équipe est disponible pour analyser vos besoins et vous proposer un devis gratuit sous 48h.</p>
+    <a href="{% url 'website:home' %}#contact"
+       class="group inline-flex items-center gap-2 px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-white font-semibold rounded-xl transition shadow-xl shadow-cyan-500/30 text-base">
+      Contactez-nous maintenant
+      <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+    </a>
+  </div>
+</section>
+
+{% endblock %}
