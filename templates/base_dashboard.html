@@ -99,6 +99,22 @@
       Panier
       {% if cart_count > 0 %}<span class="ml-auto bg-cyan-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{{ cart_count }}</span>{% endif %}
     </a>
+    <p class="px-3 pt-4 pb-1 text-gray-600 text-xs font-semibold uppercase tracking-widest">Gestion</p>
+    <a href="{% url 'dashboard:comptabilite' %}" @click="mobileMenuOpen = false"
+       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition">
+      <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+      Comptabilité
+    </a>
+    <a href="{% url 'dashboard:sales' %}" @click="mobileMenuOpen = false"
+       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition">
+      <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      Factures & Ventes
+    </a>
+    <a href="{% url 'dashboard:historiques' %}" @click="mobileMenuOpen = false"
+       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition">
+      <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Historiques
+    </a>
   </nav>
 
   <!-- User mobile -->
@@ -165,6 +181,29 @@
         {% if cart_count > 0 %}
         <span x-show="sidebarOpen" class="ml-auto bg-cyan-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{{ cart_count }}</span>
         {% endif %}
+      </a>
+
+      <p x-show="sidebarOpen" class="px-3 pt-4 pb-1 text-gray-600 text-xs font-semibold uppercase tracking-widest">Gestion</p>
+
+      <a href="{% url 'dashboard:comptabilite' %}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
+                {% if request.resolver_match.url_name == 'comptabilite' %}bg-cyan-500/10 text-cyan-400 border border-cyan-500/20{% else %}text-gray-400 hover:bg-white/5 hover:text-white{% endif %}">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+        <span x-show="sidebarOpen" x-transition>Comptabilité</span>
+      </a>
+
+      <a href="{% url 'dashboard:sales' %}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
+                {% if request.resolver_match.url_name == 'sales' %}bg-cyan-500/10 text-cyan-400 border border-cyan-500/20{% else %}text-gray-400 hover:bg-white/5 hover:text-white{% endif %}">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span x-show="sidebarOpen" x-transition>Factures & Ventes</span>
+      </a>
+
+      <a href="{% url 'dashboard:historiques' %}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
+                {% if request.resolver_match.url_name == 'historiques' %}bg-cyan-500/10 text-cyan-400 border border-cyan-500/20{% else %}text-gray-400 hover:bg-white/5 hover:text-white{% endif %}">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span x-show="sidebarOpen" x-transition>Historiques</span>
       </a>
 
       <p x-show="sidebarOpen" class="px-3 pt-4 pb-1 text-gray-600 text-xs font-semibold uppercase tracking-widest">Site web</p>

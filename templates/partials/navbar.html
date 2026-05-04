@@ -21,15 +21,46 @@
 
       <!-- Desktop nav -->
       <div class="hidden lg:flex items-center gap-8">
-        <a href="{% url 'website:home' %}#services" class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Services</a>
-        <a href="{% url 'website:home' %}#projets" class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Projets</a>
-        <a href="{% url 'website:home' %}#equipe" class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Équipe</a>
-        <a href="{% url 'website:home' %}#temoignages" class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Témoignages</a>
-        <a href="{% url 'website:home' %}#contact" class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Contact</a>
+        <a href="{% url 'website:home' %}#services"
+           class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Services</a>
+        <a href="{% url 'website:projets' %}"
+           class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Projets</a>
+        <a href="{% url 'website:equipe' %}"
+           class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Équipe</a>
+        <a href="{% url 'website:home' %}#temoignages"
+           class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Témoignages</a>
+        <a href="{% url 'website:home' %}#contact"
+           class="text-gray-400 hover:text-cyan-400 text-sm font-medium transition">Contact</a>
       </div>
 
-      <!-- CTA -->
+      <!-- CTA + Toggle thème -->
       <div class="hidden lg:flex items-center gap-3">
+
+        <!-- Bouton dark / light -->
+        <button
+          x-data="{
+            light: document.documentElement.classList.contains('light'),
+            toggle() {
+              this.light = !this.light;
+              document.documentElement.classList.toggle('light', this.light);
+              localStorage.setItem('tr-theme', this.light ? 'light' : 'dark');
+            }
+          }"
+          @click="toggle()"
+          title="Changer le thème"
+          class="relative w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-500/30 text-gray-400 hover:text-cyan-400 transition-all duration-200">
+          <!-- Soleil (visible en mode sombre → cliquer pour passer en clair) -->
+          <svg class="theme-icon-moon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          <!-- Lune (visible en mode clair → cliquer pour passer en sombre) -->
+          <svg class="theme-icon-sun w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+        </button>
+
         {% if user.is_authenticated %}
           <a href="{% url 'dashboard:home' %}" class="flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-xl text-cyan-400 text-sm font-medium hover:bg-cyan-500/20 transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
@@ -43,26 +74,73 @@
         {% endif %}
       </div>
 
-      <!-- Mobile menu button -->
-      <button @click="open = !open" class="lg:hidden p-2 rounded-lg text-gray-400 hover:text-white">
-        <svg x-show="!open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        <svg x-show="open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
+      <!-- Mobile: toggle thème + hamburger -->
+      <div class="flex items-center gap-2 lg:hidden">
+        <button
+          x-data="{
+            light: document.documentElement.classList.contains('light'),
+            toggle() {
+              this.light = !this.light;
+              document.documentElement.classList.toggle('light', this.light);
+              localStorage.setItem('tr-theme', this.light ? 'light' : 'dark');
+            }
+          }"
+          @click="toggle()"
+          class="w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 text-gray-400 transition">
+          <svg class="theme-icon-moon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          <svg class="theme-icon-sun w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+        </button>
+        <button @click="open = !open" class="p-2 rounded-lg text-gray-400 hover:text-white">
+          <svg x-show="!open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg x-show="open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
     </div>
   </div>
 
   <!-- Mobile menu -->
   <div x-show="open" x-transition class="lg:hidden bg-navy-900/98 backdrop-blur-xl border-t border-white/10">
-    <div class="px-4 py-4 space-y-2">
-      <a href="{% url 'website:home' %}#services" class="block px-3 py-2 text-gray-300 hover:text-cyan-400 text-sm">Services</a>
-      <a href="{% url 'website:home' %}#projets" class="block px-3 py-2 text-gray-300 hover:text-cyan-400 text-sm">Projets</a>
-      <a href="{% url 'website:home' %}#equipe" class="block px-3 py-2 text-gray-300 hover:text-cyan-400 text-sm">Équipe</a>
-      <a href="{% url 'website:home' %}#contact" class="block px-3 py-2 text-gray-300 hover:text-cyan-400 text-sm">Contact</a>
-      {% if user.is_authenticated %}
-        <a href="{% url 'dashboard:home' %}" class="block px-3 py-2 text-cyan-400 text-sm font-medium">Dashboard</a>
-      {% else %}
-        <a href="{% url 'accounts:login' %}" class="block px-3 py-2 text-gray-300 hover:text-cyan-400 text-sm">Connexion</a>
-      {% endif %}
+    <div class="px-4 py-4 space-y-1">
+      <a href="{% url 'website:home' %}#services" class="flex items-center gap-2 px-3 py-2.5 text-gray-300 hover:text-cyan-400 hover:bg-white/5 rounded-xl text-sm transition">
+        <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Services
+      </a>
+      <a href="{% url 'website:projets' %}" class="flex items-center gap-2 px-3 py-2.5 text-gray-300 hover:text-cyan-400 hover:bg-white/5 rounded-xl text-sm transition">
+        <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        Projets
+      </a>
+      <a href="{% url 'website:equipe' %}" class="flex items-center gap-2 px-3 py-2.5 text-gray-300 hover:text-cyan-400 hover:bg-white/5 rounded-xl text-sm transition">
+        <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Équipe
+      </a>
+      <a href="{% url 'website:home' %}#temoignages" class="flex items-center gap-2 px-3 py-2.5 text-gray-300 hover:text-cyan-400 hover:bg-white/5 rounded-xl text-sm transition">
+        <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+        Témoignages
+      </a>
+      <a href="{% url 'website:home' %}#contact" class="flex items-center gap-2 px-3 py-2.5 text-gray-300 hover:text-cyan-400 hover:bg-white/5 rounded-xl text-sm transition">
+        <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        Contact
+      </a>
+      <div class="border-t border-white/10 pt-3 mt-3">
+        {% if user.is_authenticated %}
+          <a href="{% url 'dashboard:home' %}" class="flex items-center gap-2 px-3 py-2.5 text-cyan-400 hover:bg-cyan-500/10 rounded-xl text-sm font-medium transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+            Dashboard
+          </a>
+        {% else %}
+          <a href="{% url 'accounts:login' %}" class="flex items-center gap-2 px-3 py-2.5 text-gray-300 hover:text-cyan-400 hover:bg-white/5 rounded-xl text-sm transition">Connexion</a>
+          <a href="{% url 'website:home' %}#contact" class="mt-2 flex items-center justify-center gap-2 px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-white text-sm font-semibold rounded-xl transition">
+            Devis gratuit
+          </a>
+        {% endif %}
+      </div>
     </div>
   </div>
 </nav>

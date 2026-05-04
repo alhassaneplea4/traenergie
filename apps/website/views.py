@@ -27,6 +27,30 @@ class ServicesPageView(View):
         return render(request, "website/services.html", context)
 
 
+class ProjetsPageView(View):
+    def get(self, request):
+        category = request.GET.get("cat", "")
+        qs = Project.objects.all()
+        if category:
+            qs = qs.filter(category=category)
+        context = {
+            "company": CompanyInfo.get_instance(),
+            "projects": qs,
+            "active_cat": category,
+            "categories": Project.CATEGORY_CHOICES,
+        }
+        return render(request, "website/projets.html", context)
+
+
+class EquipePageView(View):
+    def get(self, request):
+        context = {
+            "company": CompanyInfo.get_instance(),
+            "team": TeamMember.objects.filter(is_active=True).order_by("order"),
+        }
+        return render(request, "website/equipe.html", context)
+
+
 class ContactView(View):
     def post(self, request):
         form = ContactForm(request.POST)

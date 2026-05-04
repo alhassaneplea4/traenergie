@@ -1,0 +1,90 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reçu {{ sale.reference }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print {
+      body { width: 80mm; margin: 0; padding: 0; background: white; }
+      .no-print { display: none !important; }
+      .print-area { padding: 10px; width: 100%; box-sizing: border-box; box-shadow: none; margin: 0; }
+    }
+    @page { margin: 0; }
+    body { font-family: monospace; color: #000; background: #0f172a; }
+    .receipt-container { background: white; width: 80mm; margin: 20px auto; padding: 15px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+  </style>
+</head>
+<body onload="window.print()">
+  
+  <div class="no-print flex justify-center gap-4 py-8">
+    <button onclick="window.print()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-sm font-semibold transition shadow-lg">Imprimer le reçu</button>
+    <a href="{% url 'dashboard:cart' %}" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm font-semibold transition">Retour au Panier</a>
+  </div>
+
+  <div class="receipt-container print-area">
+    <!-- Header -->
+    <div class="text-center mb-4">
+      <h1 class="font-bold text-xl mb-1">TRAENERGIE</h1>
+      <p class="text-xs">Vente de matériels solaires</p>
+      <p class="text-xs">Tél: +224 622 00 00 00</p>
+      <p class="text-xs">Conakry, Guinée</p>
+      <div class="border-b border-dashed border-black my-2"></div>
+    </div>
+
+    <!-- Info -->
+    <div class="text-xs mb-4">
+      <p><strong>Reçu:</strong> {{ sale.reference }}</p>
+      <p><strong>Date:</strong> {{ sale.created_at|date:"d/m/Y H:i" }}</p>
+      <p><strong>Caissier:</strong> {{ sale.created_by.username|default:"Système" }}</p>
+      {% if sale.customer_name %}
+      <p><strong>Client:</strong> {{ sale.customer_name }}</p>
+      {% endif %}
+      {% if sale.customer_phone %}
+      <p><strong>Tél:</strong> {{ sale.customer_phone }}</p>
+      {% endif %}
+      <div class="border-b border-dashed border-black my-2"></div>
+    </div>
+
+    <!-- Items -->
+    <table class="w-full text-xs mb-4">
+      <thead>
+        <tr class="border-b border-black">
+          <th class="text-left py-1 w-1/2">Article</th>
+          <th class="text-right py-1">Qte</th>
+          <th class="text-right py-1">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in sale.items.all %}
+        <tr>
+          <td class="py-1 pr-1">{{ item.product.name|truncatechars:20 }}</td>
+          <td class="text-right py-1">{{ item.quantity }}</td>
+          <td class="text-right py-1">{{ item.subtotal|floatformat:0|intcomma }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Totals -->
+    <div class="border-t border-dashed border-black pt-2 mb-4">
+      <div class="flex justify-between font-bold text-sm">
+        <span>TOTAL:</span>
+        <span>{{ sale.total_amount|floatformat:0|intcomma }} GNF</span>
+      </div>
+      <div class="flex justify-between text-xs mt-1">
+        <span>Paiement:</span>
+        <span>{{ sale.get_payment_method_display }}</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center text-xs">
+      <p>Merci de votre visite !</p>
+    </div>
+  </div>
+
+</body>
+</html>

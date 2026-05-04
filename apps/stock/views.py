@@ -5,8 +5,10 @@ from django.contrib import messages
 from django.views import View
 from django.db.models import Q
 
-from .models import Product, Category, CartItem, Cart, StockMovement
+from .models import Product, Category, CartItem, Cart, StockMovement, Sale, SaleItem
 from .forms import ProductForm, StockMovementForm
+from apps.dashboard.models import FinancialTransaction
+from apps.dashboard.views import log_action
 
 
 class ProductListView(LoginRequiredMixin, View):
@@ -36,6 +38,11 @@ class ProductCreateView(LoginRequiredMixin, View):
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save()
+            log_action(
+                request.user, "product_create",
+                f"Création du produit « {product.name} » (SKU: {product.sku})",
+                {"product_id": product.pk, "name": product.name, "sku": product.sku, "price": str(product.unit_price)},
+            )
             messages.success(request, f"Produit « {product.name} » créé avec succès.")
             if request.htmx:
                 products = Product.objects.select_related("category", "unit").filter(is_active=True)
@@ -78,6 +85,11 @@ class ProductDeleteView(LoginRequiredMixin, View):
         name = product.name
         product.is_active = False
         product.save()
+        log_action(
+            request.user, "product_delete",
+            f"Désactivation du produit « {name} » (SKU: {product.sku})",
+            {"product_id": product.pk, "name": name, "sku": product.sku},
+        )
         messages.success(request, f"Produit « {name} » désactivé.")
         if request.htmx:
             products = Product.objects.select_related("category", "unit").filter(is_active=True)
@@ -91,7 +103,8 @@ class ProductDeleteView(LoginRequiredMixin, View):
 
 class StockMovementView(LoginRequiredMixin, View):
     def get(self, request):
-        movements = StockMovement.objects.select_related("product", "created_by").order_by("-created_at")[:50]
+        # Limité aux 7 derniers mouvements
+        movements = StockMovement.objects.select_related("product", "created_by").order_by("-created_at")[:7]
         context = {
             "movements": movements,
             "form": StockMovementForm(),
@@ -104,6 +117,14 @@ class StockMovementView(LoginRequiredMixin, View):
             movement = form.save(commit=False)
             movement.created_by = request.user
             movement.save()
+            # Map movement_type to log action
+            action_map = {"in": "stock_in", "out": "stock_out", "adjustment": "stock_adjust", "return": "stock_return"}
+            log_action(
+                request.user,
+                action_map.get(movement.movement_type, "other"),
+                f"{movement.get_movement_type_display()} de {movement.quantity} × {movement.product.name}",
+                {"product": movement.product.name, "quantity": movement.quantity, "type": movement.movement_type, "reason": movement.reason},
+            )
             messages.success(request, "Mouvement de stock enregistré.")
         else:
             messages.error(request, "Erreur dans le formulaire.")
@@ -183,8 +204,9 @@ def cart_update_qty(request, item_id):
 
 
 @login_required
+@login_required
 def cart_checkout(request):
-    """Convert cart to a stock-out movement for each item."""
+    """Convert cart to a stock-out movement for each item and record revenue."""
     if request.method != "POST":
         return redirect("dashboard:cart")
     cart, _ = Cart.objects.get_or_create(user=request.user)
@@ -192,17 +214,86 @@ def cart_checkout(request):
         messages.warning(request, "Votre panier est vide.")
         return redirect("dashboard:cart")
 
+    customer_name = request.POST.get("customer_name", "")
+    customer_phone = request.POST.get("customer_phone", "")
+    payment_method = request.POST.get("payment_method", "cash")
+
+    # Vérification des stocks d'abord
     for item in cart.items.select_related("product").all():
         if item.quantity > item.product.quantity_in_stock:
             messages.error(request, f"Stock insuffisant pour {item.product.name}.")
             return redirect("dashboard:cart")
+
+    # Création de la Vente (Sale)
+    sale = Sale.objects.create(
+        customer_name=customer_name,
+        customer_phone=customer_phone,
+        payment_method=payment_method,
+        created_by=request.user,
+    )
+
+    total_sale = 0
+    product_names = []
+
+    for item in cart.items.select_related("product").all():
+        # Créer le détail de la vente
+        SaleItem.objects.create(
+            sale=sale,
+            product=item.product,
+            quantity=item.quantity,
+            unit_price=item.product.unit_price
+        )
+
+        # Mouvement de stock
         StockMovement.objects.create(
             product=item.product,
             movement_type="out",
             quantity=item.quantity,
-            reason=f"Sortie panier — {request.user.get_full_name() or request.user.username}",
+            reason=f"Vente #{sale.reference} — {request.user.get_full_name() or request.user.username}",
             created_by=request.user,
         )
+        total_sale += item.subtotal
+        product_names.append(f"{item.product.name} ×{item.quantity}")
+
+    # Mise à jour du total de la vente
+    sale.total_amount = total_sale
+    sale.save()
+
+    # Create a revenue transaction for this sale
+    if total_sale > 0:
+        tx = FinancialTransaction.objects.create(
+            transaction_type="revenue",
+            category="vente",
+            amount=total_sale,
+            reference=sale.reference,  # Use same reference
+            description=f"Vente #{sale.reference} : {', '.join(product_names)}",
+            created_by=request.user,
+        )
+        log_action(
+            request.user, "cart_checkout",
+            f"Validation de la vente {sale.reference} — {len(product_names)} article(s) pour {total_sale} GNF",
+            {"reference": sale.reference, "total": str(total_sale), "products": product_names},
+        )
+
     cart.clear()
-    messages.success(request, "Sortie de stock validée avec succès.")
-    return redirect("dashboard:cart")
+    messages.success(request, "Vente validée avec succès. Préparation du reçu...")
+    return redirect("dashboard:sale_receipt", pk=sale.pk)
+
+
+class SaleReceiptView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        sale = get_object_or_404(Sale, pk=pk)
+        return render(request, "stock/receipt.html", {"sale": sale})
+
+class SaleListView(LoginRequiredMixin, View):
+    def get(self, request):
+        qs = Sale.objects.select_related("created_by").prefetch_related("items__product").order_by("-created_at")
+        search = request.GET.get("q", "")
+        if search:
+            qs = qs.filter(Q(reference__icontains=search) | Q(customer_name__icontains=search) | Q(customer_phone__icontains=search))
+            
+        context = {
+            "sales": qs[:100],  # Limit to latest 100 for performance
+            "search": search,
+        }
+        return render(request, "stock/sale_list.html", context)

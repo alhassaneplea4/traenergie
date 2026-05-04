@@ -235,3 +235,40 @@ class OrderItem(models.Model):
     @property
     def subtotal(self):
         return self.unit_price * self.quantity
+
+class Sale(models.Model):
+    reference = models.CharField(max_length=50, unique=True, verbose_name="Référence")
+    customer_name = models.CharField(max_length=200, blank=True, verbose_name="Nom du client")
+    customer_phone = models.CharField(max_length=50, blank=True, verbose_name="Téléphone client")
+    total_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Montant total")
+    payment_method = models.CharField(max_length=50, default="cash", choices=[("cash", "Espèces"), ("card", "Carte Bancaire"), ("mobile", "Mobile Money"), ("transfer", "Virement")], verbose_name="Méthode de paiement")
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="Vendeur")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Vente"
+        verbose_name_plural = "Ventes"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Vente #{self.reference}"
+
+    def save(self, *args, **kwargs):
+        if not self.reference:
+            self.reference = f"FAC-{timezone.now().strftime('%Y%m%d')}-{uuid.uuid4().hex[:4].upper()}"
+        super().save(*args, **kwargs)
+
+
+class SaleItem(models.Model):
+    sale = models.ForeignKey(Sale, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, verbose_name="Produit")
+    quantity = models.PositiveIntegerField(verbose_name="Quantité")
+    unit_price = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Prix unitaire")
+
+    class Meta:
+        verbose_name = "Article vendu"
+        verbose_name_plural = "Articles vendus"
+
+    @property
+    def subtotal(self):
+        return self.unit_price * self.quantity

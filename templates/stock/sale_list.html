@@ -1,0 +1,170 @@
+{% extends "base_dashboard.html" %}
+{% load humanize %}
+
+{% block title %}Factures & Ventes — Traenergie{% endblock %}
+{% block page_title %}Historique des factures{% endblock %}
+{% block page_subtitle %}Consultez et réimprimez les reçus des ventes passées{% endblock %}
+
+{% block content %}
+<div class="bg-card border border-white/8 rounded-2xl overflow-hidden" x-data="{ detailModalOpen: false, currentSale: null }">
+  
+  <!-- Filters --> 
+  <div class="px-5 py-4 border-b border-white/5 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-2 text-sm text-gray-400 font-medium">
+      <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      Liste des factures
+    </div>
+    
+    <form method="get" class="flex flex-wrap gap-3 items-center">
+      <div class="relative">
+        <svg class="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" name="q" value="{{ search }}" placeholder="Réf. ou nom du client..."
+               class="bg-slate-800 border border-slate-700 rounded-lg pl-9 pr-3 py-2 text-white text-sm focus:outline-none focus:border-cyan-500 transition w-48 lg:w-64">
+      </div>
+      <button type="submit" class="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm rounded-lg transition">
+        Rechercher
+      </button>
+      {% if search %}
+      <a href="{% url 'dashboard:sales' %}" class="px-3 py-2 text-gray-400 hover:text-white text-sm transition">X</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-white/5 bg-white/2">
+          <th class="text-left px-5 py-3 text-gray-500 font-medium text-xs uppercase tracking-wide">Date</th>
+          <th class="text-left px-5 py-3 text-gray-500 font-medium text-xs uppercase tracking-wide">Référence</th>
+          <th class="text-left px-5 py-3 text-gray-500 font-medium text-xs uppercase tracking-wide">Client</th>
+          <th class="text-right px-5 py-3 text-gray-500 font-medium text-xs uppercase tracking-wide">Montant</th>
+          <th class="text-left px-5 py-3 text-gray-500 font-medium text-xs uppercase tracking-wide">Paiement</th>
+          <th class="text-right px-5 py-3 text-gray-500 font-medium text-xs uppercase tracking-wide">Action</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-white/4">
+        {% for sale in sales %}
+        <tr class="hover:bg-white/2 transition">
+          <td class="px-5 py-3 text-gray-400 text-xs whitespace-nowrap">
+            {{ sale.created_at|date:"d/m/Y H:i" }}
+          </td>
+          <td class="px-5 py-3 text-white font-mono text-sm">
+            {{ sale.reference }}
+          </td>
+          <td class="px-5 py-3 text-gray-300">
+            {% if sale.customer_name %}{{ sale.customer_name }}{% else %}<span class="text-gray-500 italic">Anonyme</span>{% endif %}
+            {% if sale.customer_phone %}<div class="text-xs text-gray-500">{{ sale.customer_phone }}</div>{% endif %}
+          </td>
+          <td class="px-5 py-3 text-right text-cyan-400 font-bold">
+            {{ sale.total_amount|floatformat:0|intcomma }} GNF
+          </td>
+          <td class="px-5 py-3 text-gray-400 text-xs">
+            <span class="px-2 py-0.5 rounded-md border border-white/10 bg-white/5">{{ sale.get_payment_method_display }}</span>
+          </td>
+          <td class="px-5 py-3 text-right">
+            <div class="flex items-center justify-end gap-2">
+              <button @click="currentSale = { reference: '{{ sale.reference }}', date: '{{ sale.created_at|date:'d/m/Y H:i' }}', customer: '{{ sale.customer_name|default:'Anonyme'|escapejs }}', total: '{{ sale.total_amount|floatformat:0|intcomma }}', items: [{% for item in sale.items.all %}{ name: '{{ item.product.name|escapejs }}', qty: {{ item.quantity }}, subtotal: '{{ item.subtotal|floatformat:0|intcomma }}' }{% if not forloop.last %},{% endif %}{% endfor %}] }; detailModalOpen = true"
+                      class="p-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 text-cyan-400 rounded-lg transition" title="Voir les produits">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </button>
+              <a href="{% url 'dashboard:sale_receipt' sale.pk %}" target="_blank"
+                 class="p-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 text-blue-400 rounded-lg transition" title="Imprimer le reçu">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="py-16 text-center text-gray-600">
+            <svg class="w-10 h-10 mx-auto mb-2 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <p>Aucune facture enregistrée</p>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Detail Modal -->
+  <div x-show="detailModalOpen" style="display: none;" class="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div x-show="detailModalOpen" x-transition.opacity class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+      <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div x-show="detailModalOpen"
+             x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             @click.outside="detailModalOpen = false"
+             class="relative transform overflow-hidden rounded-2xl bg-card border border-white/10 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+          
+          <div class="px-6 py-5 border-b border-white/5 flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-white flex items-center gap-2">
+              <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              Détails de la facture
+            </h3>
+            <button @click="detailModalOpen = false" class="text-gray-400 hover:text-white transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          
+          <div class="px-6 py-5" x-show="currentSale">
+            <template x-if="currentSale">
+              <div class="space-y-4">
+                <div class="flex justify-between items-center pb-3 border-b border-white/5">
+                  <div>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Référence</p>
+                    <p class="text-sm text-white font-mono" x-text="currentSale.reference"></p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Date</p>
+                    <p class="text-sm text-white" x-text="currentSale.date"></p>
+                  </div>
+                </div>
+                
+                <div>
+                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Produits achetés</p>
+                  <div class="bg-slate-900/50 border border-slate-800 rounded-lg overflow-hidden">
+                    <table class="w-full text-xs">
+                      <thead class="bg-slate-800/80">
+                        <tr>
+                          <th class="text-left px-3 py-2 text-gray-400 font-medium">Article</th>
+                          <th class="text-center px-3 py-2 text-gray-400 font-medium">Qté</th>
+                          <th class="text-right px-3 py-2 text-gray-400 font-medium">Sous-total</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-800">
+                        <template x-for="item in currentSale.items" :key="item.name">
+                          <tr>
+                            <td class="px-3 py-2 text-gray-300" x-text="item.name"></td>
+                            <td class="px-3 py-2 text-center text-gray-400" x-text="item.qty"></td>
+                            <td class="px-3 py-2 text-right text-cyan-400 font-medium" x-text="item.subtotal + ' GNF'"></td>
+                          </tr>
+                        </template>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                <div class="flex justify-between items-center pt-3 border-t border-white/5">
+                  <span class="text-sm font-semibold text-gray-400">Total payé</span>
+                  <span class="text-lg font-bold text-cyan-400" x-text="currentSale.total + ' GNF'"></span>
+                </div>
+              </div>
+            </template>
+          </div>
+          
+          <div class="px-6 py-4 bg-white/2 border-t border-white/5 text-right">
+            <button @click="detailModalOpen = false" class="px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-sm rounded-lg transition">Fermer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
