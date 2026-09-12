@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -72,10 +73,12 @@ TEMPLATES = [
 WSGI_APPLICATION = "traenergie.wsgi.application"
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=0 if os.getenv("VERCEL") else 600,
+        ssl_require=bool(os.getenv("DATABASE_URL", ""))
+        and not os.getenv("DATABASE_URL", "").startswith("sqlite"),
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [

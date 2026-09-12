@@ -1,0 +1,14 @@
+# Traenergie infos
+
+# Dans le terminal
+./setup.bat
+
+# infos cpt admin
+user : elhadj
+mail : elhadj@traenrgie.com
+pwd  : 1122^2
+
+# On supabase 
+
+# on vercel
+
