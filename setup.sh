@@ -32,11 +32,6 @@ python manage.py loaddata apps/website/fixtures/initial_data.json
 python manage.py loaddata apps/stock/fixtures/initial_data.json
 
 # Create superuser
-echo "[6/6] Création du compte administrateur..."
-echo ""
-echo "Entrez les informations du super-administrateur :"
-python manage.py createsuperuser
-
 echo ""
 echo "=========================================="
 echo "  ✅ Installation terminée !"

@@ -42,13 +42,6 @@ if errorlevel 1 goto :error
 "%PYTHON%" manage.py loaddata apps/stock/fixtures/initial_data.json
 if errorlevel 1 goto :error
 
-REM Create superuser
-echo [6/6] Creation du compte administrateur...
-echo.
-echo Entrez les informations du super-administrateur :
-"%PYTHON%" manage.py createsuperuser
-if errorlevel 1 goto :error
-
 echo.
 echo ==========================================
 echo   Installation terminee avec succes !

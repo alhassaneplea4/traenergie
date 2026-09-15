@@ -9,9 +9,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-change-me-in-production")
 
-DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+configured_hosts = os.getenv("ALLOWED_HOSTS", "")
+ALLOWED_HOSTS = [host.strip() for host in configured_hosts.split(",") if host.strip()]
+for default_host in ("localhost", "127.0.0.1", "traenergie.vercel.app"):
+    if default_host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(default_host)
+vercel_url = os.getenv("VERCEL_URL", "").strip()
+normalized_vercel_url = vercel_url.removeprefix("https://").removeprefix("http://").rstrip("/")
+if normalized_vercel_url and normalized_vercel_url not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(normalized_vercel_url)
 
 DJANGO_APPS = [
     "django.contrib.admin",
